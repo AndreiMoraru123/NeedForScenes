@@ -1,5 +1,6 @@
 #include "Objects/scene.hpp"
 #include "Objects/structs.hpp"
+#include "Objects/camera.cpp"
 #include <pcl/visualization/pcl_visualizer.h>
 #include <unordered_map>
 
@@ -10,6 +11,9 @@ int main() {
   viewer->setBackgroundColor(0, 0, 0);
   viewer->addCoordinateSystem(1.0);
   viewer->initCameraParameters();
+
+  int* screenSize = viewer->getRenderWindow()->GetScreenSize();
+  viewer->setSize(screenSize[0], screenSize[1]);
 
   // Set up the camera
   // Set the viewer's camera position and adjust clipping planes
@@ -37,7 +41,8 @@ int main() {
       {"Left", false},
       {"Right", false},
       {"Up", false},
-      {"Down", false}
+      {"Down", false},
+      {"x", false},
   };
 
   // Register keyboard callback function
@@ -47,14 +52,20 @@ int main() {
     }
   });
 
-  // Main loop
+  CameraAngle currentAngle = FPS;
+  std::vector<CameraAngle> angles = {XY, TopDown, Side, FPS};
+
   float boundary_margin = 10.0; // Margin around the car to set as viewer boundary
+  float x_min = -boundary_margin, x_max = boundary_margin;
+  float y_min = -boundary_margin, y_max = boundary_margin;
   int time_us = 0;
   const int interval_us = 100000;
   float dt = interval_us * 1e-6;
-  int camera_update_interval = 1e6;
+  bool changeCameraFlag = true;
+
 
   car.render(viewer); // Render the car initially before entering the loop
+  // Main loop
   while (!viewer->wasStopped()) {
     viewer->spinOnce(100);
 
@@ -81,18 +92,33 @@ int main() {
       car.steer(0.0);
     }
 
+    if (key_states["x"]) {
+      currentAngle = angles[(currentAngle + 1) % angles.size()];
+      changeCameraView(currentAngle, viewer);
+      std::cout << "Camera angle: " << currentAngle << std::endl;
+      key_states["x"] = false;
+    }
+
     // Move the car based on controls
     car.move(dt * reverse_multiplier, time_us);
     time_us += interval_us;
 
-//    if (time_us % camera_update_interval == 0) {
-//      Vect3 car_position = car.getPosition();
-//      // Set the viewer's boundary based on the car's position
-//      viewer->setCameraPosition(car_position.x - 10, car_position.y - 10,
-//                                car_position.z + 10, car_position.x,
-//                                car_position.y, car_position.z, 0, 0, 1);
+    Vect3 car_position = car.getPosition();
+
+    if (car_position.x < x_min || car_position.x > x_max ||
+        car_position.y < y_min || car_position.y > y_max) {
+      // Set the viewer's boundary based on the car's position
+      viewer->setCameraPosition(car_position.x - 10, car_position.y - 10,
+                                car_position.z + 10, car_position.x,
+                                car_position.y, car_position.z, 0, 0, 1);
       viewer->setCameraClipDistances(0.01, 500);
-//    }
+      // Update the boundary limits
+      x_min = car_position.x - boundary_margin;
+      x_max = car_position.x + boundary_margin;
+      y_min = car_position.y - boundary_margin;
+      y_max = car_position.y + boundary_margin;
+
+    }
 
     // Render the car
     car.render(viewer);

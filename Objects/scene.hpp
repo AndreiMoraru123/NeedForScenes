@@ -35,10 +35,6 @@ public:
   }
 };
 
-enum cameraAngle {
-  XY, TopDown, Side, FPS
-};
-
 class Control {
 public:
   long long time_us;
