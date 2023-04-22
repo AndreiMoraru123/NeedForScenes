@@ -1,28 +1,38 @@
+#include "Objects/scene.hpp"
+#include "Objects/structs.hpp"
 #include <pcl/visualization/pcl_visualizer.h>
 #include <unordered_map>
 
 int main() {
-  // Create a visualizer (an object that will display the point cloud)
-  pcl::visualization::PCLVisualizer viewer("PCL Viewer");
+  // Set up a PCLVisualizer
+  pcl::visualization::PCLVisualizer::Ptr viewer(new pcl::visualization::PCLVisualizer("3D Viewer"));
+  viewer->getRenderWindow()->GlobalWarningDisplayOff();
+  viewer->setBackgroundColor(0, 0, 0);
+  viewer->addCoordinateSystem(1.0);
+  viewer->initCameraParameters();
 
-  // Define cube parameters
-  double cube_x = 100.0;
-  double cube_y = 100.0;
-  double cube_z = 100.0;
-  double cube_size = 100.0;
-  double cube_rot_x = 100.0;
-  double cube_rot_y = 100.0;
-  double cube_rot_z = 100.0;
+  // Set up the camera
+  // Set the viewer's camera position and adjust clipping planes
+  viewer->setCameraPosition(0, 0, 50,   // Camera position
+                            0, 0, 0,    // Focal point
+                            0, 1, 0,    // View up direction
+                            0);         // Set camera viewpoint to (0, 0, 0)
+  viewer->setCameraFieldOfView(0.8);   // Set the camera's field of view (default is 0.8)
+  viewer->setCameraClipDistances(0.01, 500); // Set near and far clipping planes
 
-  // Define movement parameters for the cube (velocity and acceleration)
-  double cube_vel_x = 0.0;
-  double cube_vel_y = 0.0;
-  double cube_vel_z = 0.0;
-  double cube_accel_x = 0.0;
-  double cube_accel_y = 0.0;
-  double cube_accel_z = 0.0;
+  // Initialize a car with position, dimensions, color, velocity, angle, acceleration, steering, and front_center_distance
+  Vect3 position(0, 0, 0);
+  Vect3 dimensions(2.0, 1.0, 0.5);
+  Color color(1.0, 0.0, 0.0);
+  float velocity = 0.0;
+  float angle = 0.0;
+  float acceleration = 0.0;
+  float steering = 0.0;
+  float front_center_distance = 1.0;
+  std::string car_name = "car";
+  Car car(position, dimensions, color, velocity, angle, acceleration, steering, front_center_distance, car_name);
 
-  // Map to store the key states
+  // Set up key states for keyboard controls
   std::unordered_map<std::string, bool> key_states = {
       {"Left", false},
       {"Right", false},
@@ -30,67 +40,61 @@ int main() {
       {"Down", false}
   };
 
-  // Add the cube to the viewer (the viewer will display the cube)
-  viewer.addCube(cube_x, cube_x + cube_size,
-                 cube_y, cube_y + cube_size,
-                 cube_z, cube_z + cube_size,
-                 cube_rot_x, cube_rot_y, cube_rot_z, "Cube");
-
   // Register keyboard callback function
-  viewer.registerKeyboardCallback([&](const pcl::visualization::KeyboardEvent& event) {
+  viewer->registerKeyboardCallback([&](const pcl::visualization::KeyboardEvent& event) {
     if (key_states.find(event.getKeySym()) != key_states.end()) {
       key_states[event.getKeySym()] = event.keyDown();
     }
   });
 
-  // Start the visualization loop
-  while (!viewer.wasStopped()) {
-    // Update the cube acceleration based on key states
-    if (key_states["Left"]) {
-      cube_accel_x = -10.0;
-    } else if (key_states["Right"]) {
-      cube_accel_x = 10.0;
-    } else {
-      cube_accel_x = 0.0;
-    }
+  // Main loop
+  float boundary_margin = 10.0; // Margin around the car to set as viewer boundary
+  int time_us = 0;
+  const int interval_us = 100000;
+  float dt = interval_us * 1e-6;
+  int camera_update_interval = 1e6;
 
+  car.render(viewer); // Render the car initially before entering the loop
+  while (!viewer->wasStopped()) {
+    viewer->spinOnce(100);
+
+    // Remove the car from the viewer
+    viewer->removeShape(car_name);
+    viewer->removeShape(car_name + "front");
+
+    // Update the car's acceleration and steering based on keyboard input
+    int reverse_multiplier = 1;
     if (key_states["Up"]) {
-      cube_accel_y = 10.0;
+      car.accelerate(1.0);
     } else if (key_states["Down"]) {
-      cube_accel_y = -10.0;
+      car.accelerate(1.0);
+      reverse_multiplier = -1;
     } else {
-      cube_accel_y = 0.0;
+      car.accelerate(0.0);
     }
 
-    // Update the cube position and velocity
-    cube_x += cube_vel_x;
-    cube_y += cube_vel_y;
-    cube_z += cube_vel_z;
-    cube_vel_x += cube_accel_x;
-    cube_vel_y += cube_accel_y;
-    cube_vel_z += cube_accel_z;
-
-    // Bounce the cube off the boundaries
-    if (cube_x < -500.0 || cube_x > 500.0) {
-      cube_vel_x *= -1.0;
-    }
-    if (cube_y < -500.0 || cube_y > 500.0) {
-      cube_vel_y *= -1.0;
-    }
-    if (cube_z < -500.0 || cube_z > 500.0) {
-      cube_vel_z *= 1.0;
+    if (key_states["Left"]) {
+      car.steer(0.2);
+    } else if (key_states["Right"]) {
+      car.steer(-0.2);
+    } else {
+      car.steer(0.0);
     }
 
-    // Update the cube in the viewer
-    viewer.updateShapePose("Cube", Eigen::Affine3f(
-                                       Eigen::Translation3f(
-                                           cube_x,
-                                           cube_y,
-                                           cube_z)));
+    // Move the car based on controls
+    car.move(dt * reverse_multiplier, time_us);
+    time_us += interval_us;
 
-    // Update the viewer will be updated once
-    viewer.spinOnce(100);
+//    if (time_us % camera_update_interval == 0) {
+//      Vect3 car_position = car.getPosition();
+//      // Set the viewer's boundary based on the car's position
+//      viewer->setCameraPosition(car_position.x - 10, car_position.y - 10,
+//                                car_position.z + 10, car_position.x,
+//                                car_position.y, car_position.z, 0, 0, 1);
+      viewer->setCameraClipDistances(0.01, 500);
+//    }
+
+    // Render the car
+    car.render(viewer);
   }
-
-  return 0;
 }
