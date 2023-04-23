@@ -74,7 +74,7 @@ int main() {
     viewer->removeShape(car_name + "front");
 
     // Update the car's acceleration and steering based on keyboard input
-    int reverse_multiplier = 1;
+    float reverse_multiplier = 1;
     if (key_states["Up"]) {
       car.accelerate(1.0);
     } else if (key_states["Down"]) {
