@@ -43,6 +43,7 @@ int main() {
       {"Up", false},
       {"Down", false},
       {"x", false},
+      {"spec", false}
   };
 
   // Register keyboard callback function
@@ -61,7 +62,6 @@ int main() {
   int time_us = 0;
   const int interval_us = 100000;
   float dt = interval_us * 1e-6;
-  bool changeCameraFlag = true;
 
 
   car.render(viewer); // Render the car initially before entering the loop
@@ -80,6 +80,8 @@ int main() {
     } else if (key_states["Down"]) {
       car.accelerate(1.0);
       reverse_multiplier = -1;
+    } else if (key_states["space"]) {
+      car.accelerate(-1.0);
     } else {
       car.accelerate(0.0);
     }

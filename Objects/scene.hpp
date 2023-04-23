@@ -55,16 +55,17 @@ class Car {
   float acceleration;
   float steering;
   float front_center_distance;
+  float rolling_instace;
   std::vector<Control> controls;
   int control_index;
   double sin_angle;
   double cos_angle;
 public:
-  Car() : position(Vect3(0, 0, 0)), dimensions(Vect3(0, 0, 0)),
-          orientation(Eigen::Quaternionf(0, 0, 0, 0)),
-          name(""), color(Color(0.0f, 0.0f, 0.0f)),
-          velocity(0), angle(0), acceleration(0), steering(0),
-          front_center_distance(0), control_index(0), sin_angle(0), cos_angle(0) {}
+  Car(): position(Vect3(0, 0, 0)), dimensions(Vect3(0, 0, 0)),
+         orientation(Eigen::Quaternionf(0, 0, 0, 0)),
+         name(""), color(Color(0.0f, 0.0f, 0.0f)),
+         velocity(0), angle(0), acceleration(0), steering(0), rolling_instace(0),
+         front_center_distance(0), control_index(0), sin_angle(0), cos_angle(0) {}
   Car(Vect3 setPosition, Vect3 setDimensions, Color setColor, float setVelocity,
       float setAngle, float setAcceleration, float setSteering,
       float setFrontCenterDistance, std::string setName)
@@ -77,6 +78,7 @@ public:
     acceleration = 0;
     steering = 0;
     control_index = 0;
+    rolling_instace = 0.02;
   }
 
   void render(pcl::visualization::PCLVisualizer::Ptr& viewer) {
@@ -128,11 +130,27 @@ public:
 
     position.x += velocity * cos(angle) * dt;
     position.y += velocity * sin(angle) * dt;
+
     angle += velocity * steering * dt / front_center_distance;
     orientation = Eigen::Quaternionf(Eigen::AngleAxisf(angle, Eigen::Vector3f::UnitZ()));
     velocity += acceleration * dt;
     sin_angle = sin(angle);
     cos_angle = cos(angle);
+
+    // Apply rolling instance if there is no acceleration input
+    if (acceleration == 0) {
+      if (velocity > 0) {
+        velocity -= rolling_instace;
+        if (velocity < 0) {
+          velocity = 0;
+        }
+      } else if (velocity < 0) {
+        velocity += rolling_instace;
+        if (velocity > 0) {
+          velocity = 0;
+        }
+      }
+    }
   }
 
   Vect3 getPosition() const {
@@ -140,18 +158,18 @@ public:
   }
 
   bool inbetween(double point, double center, double range) {
-      return point >= center - range && point <= center + range;
+    return point >= center - range && point <= center + range;
   }
 
   bool checkCollision(Vect3 point) {
     double xPrime = (point.x - position.x) * cos_angle + (point.y - position.y) * sin_angle + position.x;
     double yPrime = -(point.x - position.x) * sin_angle + (point.y - position.y) * cos_angle + position.y;
     return (inbetween(xPrime, position.x, dimensions.x / 2) &&
-                   inbetween(yPrime, position.y, dimensions.y / 2) &&
-                   inbetween(point.z, position.z + dimensions.z / 3, dimensions.z / 3)) ||
-                  (inbetween(xPrime, position.x, dimensions.x / 4) &&
-                   inbetween(yPrime, position.y, dimensions.y / 2) &&
-                   inbetween(point.z, position.z + dimensions.z * 5 / 6, dimensions.z / 6));
+            inbetween(yPrime, position.y, dimensions.y / 2) &&
+            inbetween(point.z, position.z + dimensions.z / 3, dimensions.z / 3)) ||
+           (inbetween(xPrime, position.x, dimensions.x / 4) &&
+            inbetween(yPrime, position.y, dimensions.y / 2) &&
+            inbetween(point.z, position.z + dimensions.z * 5 / 6, dimensions.z / 6));
   }
 };
 
