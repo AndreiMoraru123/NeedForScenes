@@ -1,16 +1,10 @@
 //
 // Created by Andrei on 22-Apr-23.
 //
-
-#include <pcl/visualization/pcl_visualizer.h>
-
-enum CameraAngle {
-  XY, TopDown, Side, FPS
-};
+#include "camera.hpp"
 
 void changeCameraView(CameraAngle setAngle, pcl::visualization::PCLVisualizer::Ptr& viewer)
 {
-
   int distance = 20;
 
   switch (setAngle)
@@ -20,5 +14,4 @@ void changeCameraView(CameraAngle setAngle, pcl::visualization::PCLVisualizer::P
   case Side : viewer->setCameraPosition(0, -distance, 0, 0, 0, 1); break;
   case FPS : viewer->setCameraPosition(-10, 0, 0, 0, 0, 1); break;
   }
-
 }

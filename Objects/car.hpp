@@ -2,12 +2,13 @@
 // Created by Andrei on 22-Apr-23.
 //
 
-#ifndef NFS_SCENE_HPP
-#define NFS_SCENE_HPP
+#ifndef NFS_CAR_HPP
+#define NFS_CAR_HPP
 #include "structs.hpp"
 #include <iostream>
 #include <pcl/visualization/pcl_visualizer.h>
 #include <string>
+#include <utility>
 #include <vector>
 
 class Color {
@@ -25,8 +26,8 @@ public:
 
 class Vect3 {
 public:
-  double x, y, z;
-  Vect3(double setX, double setY, double setZ)
+  float x, y, z;
+  Vect3(float setX, float setY, float setZ)
       : x(setX), y(setY), z(setZ)
   {}
   Vect3 operator + (const Vect3& vec) const {
@@ -63,7 +64,7 @@ class Car {
 public:
   Car(): position(Vect3(0, 0, 0)), dimensions(Vect3(0, 0, 0)),
          orientation(Eigen::Quaternionf(0, 0, 0, 0)),
-         name(""), color(Color(0.0f, 0.0f, 0.0f)),
+         name("car"), color(Color(0.0f, 0.0f, 0.0f)),
          velocity(0), angle(0), acceleration(0), steering(0), rolling_instace(0),
          front_center_distance(0), control_index(0), sin_angle(0), cos_angle(0) {}
   Car(Vect3 setPosition, Vect3 setDimensions, Color setColor, float setVelocity,
@@ -71,7 +72,7 @@ public:
       float setFrontCenterDistance, std::string setName)
       : position(setPosition), dimensions(setDimensions), color(setColor),
         velocity(setVelocity), angle(setAngle), acceleration(setAcceleration),
-        steering(setSteering), front_center_distance(setFrontCenterDistance), name(setName) {
+        steering(setSteering), front_center_distance(setFrontCenterDistance), name(std::move(setName)) {
     orientation = Eigen::Quaternionf(Eigen::AngleAxisf(angle, Eigen::Vector3f::UnitZ()));
     sin_angle = sin(angle);
     cos_angle = cos(angle);
@@ -93,7 +94,7 @@ public:
                                         pcl::visualization::PCL_VISUALIZER_REPRESENTATION_SURFACE,
                                         name);
     viewer->addCube(Eigen::Vector3f(position.x + front_center_distance * cos_angle,
-                                    position.y + front_center_distance * sin_angle, position.z),
+                                              position.y + front_center_distance * sin_angle, position.z),
                     orientation,
                     dimensions.x, dimensions.y, dimensions.z,
                     name + "front");
@@ -113,7 +114,7 @@ public:
     steering = s;
   }
 
-  void control(std::vector<Control> c) {
+  void control(const std::vector<Control>& c) {
     for (auto& control : c) {
       controls.push_back(control);
     }
@@ -153,15 +154,15 @@ public:
     }
   }
 
-  Vect3 getPosition() const {
+  [[nodiscard]] Vect3 getPosition() const {
     return position;
   }
 
-  bool inbetween(double point, double center, double range) {
+  static bool inbetween(double point, double center, double range) {
     return point >= center - range && point <= center + range;
   }
 
-  bool checkCollision(Vect3 point) {
+  [[nodiscard]] bool checkCollision(Vect3 point) const {
     double xPrime = (point.x - position.x) * cos_angle + (point.y - position.y) * sin_angle + position.x;
     double yPrime = -(point.x - position.x) * sin_angle + (point.y - position.y) * cos_angle + position.y;
     return (inbetween(xPrime, position.x, dimensions.x / 2) &&
@@ -173,4 +174,4 @@ public:
   }
 };
 
-#endif // NFS_SCENE_HPP
+#endif // NFS_CAR_HPP
