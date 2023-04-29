@@ -19,10 +19,11 @@ Car::Car()
       sin_angle(0),
       cos_angle(0) {}
 
-Car::Car(Vect3 setPosition, Vect3 setDimensions, Color setColor, float setVelocity,
-         float setAngle, float setAcceleration, float setSteering,
-         float setFrontCenterDistance, std::string setName)
-    : position(setPosition),
+Car::Car(
+    Vect3 setPosition, Vect3 setDimensions, Color setColor, float setVelocity,
+    float setAngle, float setAcceleration, float setSteering,
+    float setFrontCenterDistance, std::string setName
+    ): position(setPosition),
       dimensions(setDimensions),
       color(setColor),
       velocity(setVelocity),
@@ -123,10 +124,17 @@ static bool inbetween(double point, double center, double range) {
 [[nodiscard]] bool Car::checkCollision(Vect3 point) {
   double xPrime = (point.x - position.x) * cos_angle + (point.y - position.y) * sin_angle + position.x;
   double yPrime = -(point.x - position.x) * sin_angle + (point.y - position.y) * cos_angle + position.y;
-  return (inbetween(xPrime, position.x, dimensions.x / 2) &&
-          inbetween(yPrime, position.y, dimensions.y / 2) &&
-          inbetween(point.z, position.z + dimensions.z / 3, dimensions.z / 3)) ||
-         (inbetween(xPrime, position.x, dimensions.x / 4) &&
-          inbetween(yPrime, position.y, dimensions.y / 2) &&
-          inbetween(point.z, position.z + dimensions.z * 5 / 6, dimensions.z / 6));
+  return (
+              inbetween(xPrime, position.x, dimensions.x / 2) &&
+              inbetween(yPrime, position.y, dimensions.y / 2) &&
+              inbetween(point.z, position.z + dimensions.z / 3, dimensions.z / 3)) ||
+          (
+              inbetween(xPrime, position.x, dimensions.x / 4) &&
+              inbetween(yPrime, position.y, dimensions.y / 2) &&
+              inbetween(point.z, position.z + dimensions.z * 5 / 6, dimensions.z / 6)
+          );
+}
+
+[[nodiscard]] std::string Car::getName() const {
+  return name;
 }

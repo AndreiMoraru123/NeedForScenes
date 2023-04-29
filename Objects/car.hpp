@@ -74,6 +74,7 @@ public:
   void move(float dt, int time_us);
   [[nodiscard]] Vect3 getPosition() const;
   [[nodiscard]] bool checkCollision(Vect3 point);
+  [[nodiscard]] std::string getName() const;
 };
 
 #endif // NFS_CAR_HPP

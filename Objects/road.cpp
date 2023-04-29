@@ -4,7 +4,7 @@
 
 #include "road.hpp"
 
-void renderHighway(double distancePos, pcl::visualization::PCLVisualizer::Ptr& viewer) {
+void renderRoad(double distancePos, pcl::visualization::PCLVisualizer::Ptr& viewer) {
   float roadLengthAhead = 50.0;
   float roadLengthBehind = -15.0;
   float roadWidth = 12.0;
@@ -38,7 +38,13 @@ void renderHighway(double distancePos, pcl::visualization::PCLVisualizer::Ptr& v
     viewer->addCube(-poleWidth / 2 + markerPos, poleWidth / 2 + markerPos, -poleWidth / 2 - roadWidth / 2 - poleCurve, poleWidth/2-roadWidth/2-poleCurve, 0, poleHeight, 0, 0, 0, "pole_"+std::to_string(poleIndex)+"rframe");
     viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_REPRESENTATION, pcl::visualization::PCL_VISUALIZER_REPRESENTATION_WIREFRAME, "pole_"+std::to_string(poleIndex)+"rframe");
 
-    markerPos+= poleSpace;
+    markerPos += poleSpace;
     poleIndex++;
   }
+}
+
+void renderPointCloud(pcl::visualization::PCLVisualizer::Ptr& viewer, const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud, std::string name, Color color) {
+  viewer->addPointCloud<pcl::PointXYZ>(cloud, name);
+  viewer->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 4, name);
+  viewer->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, color.r, color.g, color.b, name);
 }
