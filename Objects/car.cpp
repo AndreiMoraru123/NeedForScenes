@@ -125,6 +125,10 @@ void Car::move(float dt, int time_us) {
   return velocity;
 }
 
+[[nodiscard]] float Car::getAngle() const {
+  return angle;
+}
+
 static bool inbetween(double point, double center, double range) {
   return point >= center - range && point <= center + range;
 }

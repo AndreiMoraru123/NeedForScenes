@@ -3,7 +3,7 @@ project(NFS)
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(CMAKE_PREFIX_PATH "C:/Users/Andrei/vcpkg/installed/x64-windows/share")
+#set(CMAKE_PREFIX_PATH "C:/Users/Andrei/vcpkg/installed/x64-windows/share")
 set(CXX_FLAGS "-Wall")
 set(CMAKE_CXX_FLAGS, "${CXX_FLAGS}")
 
