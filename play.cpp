@@ -81,7 +81,7 @@ int main() {
       car.accelerate(1.0);
       reverse_multiplier = -1;
     } else if (key_states["space"]) {
-      car.accelerate(-1.0);
+      car.accelerate(-2.0);
     } else {
       car.accelerate(0.0);
     }
@@ -97,7 +97,6 @@ int main() {
     if (key_states["x"]) {
       currentAngle = angles[(currentAngle + 1) % angles.size()];
       changeCameraView(currentAngle, viewer);
-      std::cout << "Camera angle: " << currentAngle << std::endl;
       key_states["x"] = false;
     }
 
