@@ -67,7 +67,6 @@ int main() {
   Scene scene(viewer);
   scene.stepScene(car, 0.0, 0, 0, viewer);
 
-  car.render(viewer); // Render the car initially before entering the loop
   // Main loop
   while (!viewer->wasStopped()) {
     viewer->spinOnce(100);
@@ -104,7 +103,6 @@ int main() {
     }
 
     // Move the car based on controls
-//    car.move(dt * reverse_multiplier, time_us);
     scene.stepScene(car, dt * reverse_multiplier, time_us, 10, viewer);
     time_us += interval_us;
 
@@ -122,10 +120,6 @@ int main() {
       x_max = car_position.x + boundary_margin;
       y_min = car_position.y - boundary_margin;
       y_max = car_position.y + boundary_margin;
-
     }
-
-    // Render the car
-//    car.render(viewer);
   }
 }

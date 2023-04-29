@@ -117,6 +117,14 @@ void Car::move(float dt, int time_us) {
   return position;
 }
 
+[[nodiscard]] std::string Car::getName() const {
+  return name;
+}
+
+[[nodiscard]] float Car::getVelocity() const {
+  return velocity;
+}
+
 static bool inbetween(double point, double center, double range) {
   return point >= center - range && point <= center + range;
 }
@@ -133,8 +141,4 @@ static bool inbetween(double point, double center, double range) {
               inbetween(yPrime, position.y, dimensions.y / 2) &&
               inbetween(point.z, position.z + dimensions.z * 5 / 6, dimensions.z / 6)
           );
-}
-
-[[nodiscard]] std::string Car::getName() const {
-  return name;
 }

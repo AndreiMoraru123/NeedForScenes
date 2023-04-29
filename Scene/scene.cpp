@@ -32,8 +32,6 @@ Scene::Scene(pcl::visualization::PCLVisualizer::Ptr& viewer) {
 }
 
 void Scene::stepScene(Car& egoCar, double egoVelocity, long long timestamp, int frame_per_sec, pcl::visualization::PCLVisualizer::Ptr &viewer) {
-  viewer->removeShape(egoCar.getName());
-  viewer->removeShape(egoCar.getName() + "front");
 
   egoCar.move(egoVelocity, timestamp);
   egoCar.render(viewer);

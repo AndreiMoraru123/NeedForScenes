@@ -73,8 +73,9 @@ public:
   void control(const std::vector<Control>& c);
   void move(float dt, int time_us);
   [[nodiscard]] Vect3 getPosition() const;
-  [[nodiscard]] bool checkCollision(Vect3 point);
   [[nodiscard]] std::string getName() const;
+  [[nodiscard]] float getVelocity() const;
+  [[nodiscard]] bool checkCollision(Vect3 point);
 };
 
 #endif // NFS_CAR_HPP
