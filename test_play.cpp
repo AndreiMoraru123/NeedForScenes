@@ -27,7 +27,7 @@ int main() {
 
   // Initialize a car with position, dimensions, color, velocity, angle, acceleration, steering, and front_center_distance
   Vect3 position(0, 0, 0);
-  Vect3 dimensions(2.0, 1.0, 0.5);
+  Vect3 dimensions(4.0, 2.0, 2.0);
   Color color(0.0, 1.0, 0.0);
   float velocity = 0.0;
   float angle = 0.0;
