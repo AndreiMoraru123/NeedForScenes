@@ -13,5 +13,8 @@ include_directories(${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 
-add_executable(play test_play.cpp View/camera.cpp Objects/car.cpp Objects/road.cpp Scene/scene.cpp)
+add_executable(play test_play.cpp View/camera.cpp
+        Objects/car.cpp Objects/road.cpp
+        Scene/scene.cpp Tools/tools.cpp)
+
 target_link_libraries (play ${PCL_LIBRARIES})

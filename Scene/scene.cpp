@@ -6,6 +6,7 @@
 
 Scene::Scene(pcl::visualization::PCLVisualizer::Ptr& viewer) {
 
+  tools = Tools();
   Car car1 = Car(
       Vect3(0, 0, 0),
       Vect3(4, 2, 2),

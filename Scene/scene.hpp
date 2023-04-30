@@ -7,13 +7,13 @@
 
 #include "../Objects/car.hpp"
 #include "../Objects/road.hpp"
+#include "../Tools/tools.hpp"
 
 class Scene {
 public:
   std::vector<Car> traffic;
-  Car egoCar;
-
-  std::vector<bool> track_cars = {true, true, true};
+  Tools tools;
+  std::vector<bool> track_cars = {true};
   bool visualize_lidar = true;
   bool visualize_radar = true;
   double projectedTime = 0;
