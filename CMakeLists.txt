@@ -3,7 +3,6 @@ project(NFS)
 
 set(CMAKE_CXX_STANDARD 17)
 
-#set(CMAKE_PREFIX_PATH "C:/Users/Andrei/vcpkg/installed/x64-windows/share")
 set(CXX_FLAGS "-Wall")
 set(CMAKE_CXX_FLAGS, "${CXX_FLAGS}")
 
@@ -15,6 +14,7 @@ add_definitions(${PCL_DEFINITIONS})
 
 add_executable(play test_play.cpp View/camera.cpp
         Objects/car.cpp Objects/road.cpp
-        Scene/scene.cpp Toolkit/tools.cpp)
+        Scene/scene.cpp Toolkit/tools.cpp
+        Algo/tracker.cpp Sensors/lidar.cpp)
 
 target_link_libraries (play ${PCL_LIBRARIES})

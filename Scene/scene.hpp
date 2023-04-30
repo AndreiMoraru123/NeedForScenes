@@ -13,7 +13,10 @@ class Scene {
 public:
   std::vector<Car> traffic;
   Tools tools;
+  bool pass = true;
   std::vector<bool> trackCars = {true};
+  std::vector<double> rmseThreshold = {0.30,0.16,0.95,0.70};
+  std::vector<double> rmseFailLog = {0.0,0.0,0.0,0.0};
   bool visualize_lidar = true;
   bool visualize_radar = true;
   bool visualize_pcd = false;

@@ -24,7 +24,7 @@ lidarMarker Tools::lidarSense(Car& car, pcl::visualization::PCLVisualizer::Ptr& 
   }
   measPackage.rawMeasurements << marker.x, marker.y;
   measPackage.timeStamp = timestamp;
-//  car.ukf.processMeasurement(measPackage);
+  car.getTracker().ProcessMeasurement(measPackage);
   return marker;
 }
 
@@ -62,19 +62,42 @@ if (visualize) {
   measPackage.rawMeasurements = Eigen::VectorXd(3);
   measPackage.rawMeasurements << marker.rho, marker.phi, marker.rhoDot;
   measPackage.timeStamp = timestamp;
-//  car.ukf.processMeasurement(measPackage);
+  car.getTracker().ProcessMeasurement(measPackage);
   return marker;
 }
 
-void Tools::ukfResults(Car car, pcl::visualization::PCLVisualizer::Ptr &viewer, double time, int steps) {
-//  UKF ukf = car.tracker;
-//  viewer->addSphere(pcl::PointXYZ(ukf.getPosition().x, ukf.getPosition().y, 3.0), 0.5, 0, 1, 0, car.getName() + "_ukf");
+void Tools::trackerResults(Car car, pcl::visualization::PCLVisualizer::Ptr &viewer, double time, int steps) {
+
+  Tracker tracker = car.getTracker();
+
+  viewer->addSphere(
+      pcl::PointXYZ(tracker.x_[0],tracker.x_[1],3.5),
+      0.5, 0, 1, 0,car.getName()+"_tracker");
+
+  viewer->addArrow(
+      pcl::PointXYZ(tracker.x_[0], tracker.x_[1],3.5),
+      pcl::PointXYZ(tracker.x_[0] + tracker.x_[2] * cos(tracker.x_[3]),
+                    tracker.x_[1] + tracker.x_[2] * sin(tracker.x_[3]),3.5),
+      0, 1, 0, car.getName()+"_tracker_vel");
+
   if (time > 0) {
     double dt = time / steps;
     double ct = dt;
     while (ct <= time) {
-//      ukf.Predict(dt);
-//      viewer->addSphere(pcl::PointXYZ(ukf.getPosition().x, ukf.getPosition().y, 3.0), 0.5, 0, 1, 0, car.getName() + "_ukf");
+      tracker.Prediction(dt);
+      viewer->addSphere(pcl::PointXYZ(tracker.x_[0], tracker.x_[1], 3.5),
+                        0.5, 0, 1, 0,car.getName() + "_ukf" + std::to_string(ct));
+      viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_OPACITY,
+                                          1.0 - 0.8 * (ct / time),
+                                          car.getName() + "_ukf" + std::to_string(ct));
+      viewer->addArrow(
+          pcl::PointXYZ(tracker.x_[0], tracker.x_[1],3.5),
+          pcl::PointXYZ(tracker.x_[0] + tracker.x_[2] * cos(tracker.x_[3]),
+                        tracker.x_[1] + tracker.x_[2] * sin(tracker.x_[3]), 3.5),
+          0, 1, 0, car.getName() + "_ukf_vel"+std::to_string(ct));
+      viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_OPACITY,
+                                          1.0-0.8*(ct/time),
+                                          car.getName() + "_ukf_vel"+std::to_string(ct));
       ct += dt;
     }
   }
@@ -86,18 +109,15 @@ Eigen::VectorXd Tools::calculateRMSE(
 
   Eigen::VectorXd rmse(4);
   rmse << 0, 0, 0, 0;
-
   if (estimations.size() != groundTruth.size() || estimations.size() == 0) {
     cout << "Invalid estimation or ground truth data" << endl;
     return rmse;
   }
-
   for (unsigned int i = 0; i < estimations.size(); ++i) {
     Eigen::VectorXd residual = estimations[i] - groundTruth[i];
     residual = residual.array() * residual.array();
     rmse += residual;
   }
-
   rmse = rmse / estimations.size();
   rmse = rmse.array().sqrt();
   return rmse;

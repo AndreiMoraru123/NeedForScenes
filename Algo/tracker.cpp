@@ -174,6 +174,18 @@ void Tracker::UpdateLidar(const MeasurementPackage& meas_package) {
   updateStateMeanAndCovarianceLidar(K, z_pred, meas_package, S);
 }
 
+Eigen::MatrixXd Tracker::createSigmaPointsLidar(int n_z) {
+  Eigen::MatrixXd Zsig = Eigen::MatrixXd(n_z, 2 * n_aug_ + 1);  // create matrix for sigma points in measurement space
+  // transform sigma points into measurement space
+  for (int i = 0; i < 2 * n_aug_ + 1; i++) {
+    double p_x = Xsig_pred_(0, i);
+    double p_y = Xsig_pred_(1, i);
+    Zsig(0, i) = p_x;
+    Zsig(1, i) = p_y;
+  }
+  return Zsig;
+}
+
 Eigen::VectorXd Tracker::predictMeasurementMeanLidar(const Eigen::MatrixXd& Zsig, int n_z) {
   Eigen::VectorXd z_pred = Eigen::VectorXd(n_z);  // mean predicted measurement
   // calculate mean predicted measurement

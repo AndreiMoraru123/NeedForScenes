@@ -111,21 +111,13 @@ void Car::move(float dt, int time_us) {
   }
 }
 
-[[nodiscard]] Vect3 Car::getPosition() const {
-  return position;
-}
+[[nodiscard]] Vect3 Car::getPosition() const {return position;}
+[[nodiscard]] std::string Car::getName() const {return name;}
+[[nodiscard]] float Car::getVelocity() const {return velocity;}
+[[nodiscard]] float Car::getAngle() const {return angle;}
+[[nodiscard]] Tracker Car::getTracker() const {return tracker;}
 
-[[nodiscard]] std::string Car::getName() const {
-  return name;
-}
-
-[[nodiscard]] float Car::getVelocity() const {
-  return velocity;
-}
-
-[[nodiscard]] float Car::getAngle() const {
-  return angle;
-}
+void Car::setTracker(const Tracker& t) {tracker = t;}
 
 static bool inbetween(double point, double center, double range) {
   return point >= center - range && point <= center + range;

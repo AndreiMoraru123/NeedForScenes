@@ -10,6 +10,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include "../Algo/tracker.hpp"
 
 class Color {
 public:
@@ -51,6 +52,7 @@ class Car {
   Eigen::Quaternionf orientation;
   std::string name;
   Color color;
+  Tracker tracker;
   float velocity;
   float angle;
   float acceleration;
@@ -72,10 +74,12 @@ public:
   void steer(float s);
   void control(const std::vector<Control>& c);
   void move(float dt, int time_us);
+  void setTracker(const Tracker& t);
   [[nodiscard]] Vect3 getPosition() const;
   [[nodiscard]] float getVelocity() const;
   [[nodiscard]] float getAngle() const;
   [[nodiscard]] std::string getName() const;
+  [[nodiscard]] Tracker getTracker() const;
   [[nodiscard]] bool checkCollision(Vect3 point);
 };
 
