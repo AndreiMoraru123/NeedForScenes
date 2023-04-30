@@ -37,10 +37,24 @@ void Scene::stepScene(Car& egoCar, double egoVelocity, long long timestamp, int 
   egoCar.move(egoVelocity, timestamp);
   egoCar.render(viewer);
 
-  for (auto &car : traffic) {
+  for (size_t i = 0; i < traffic.size(); ++i) {
+    Car& car = traffic[i];
     viewer->removeShape(car.getName());
     viewer->removeShape(car.getName() + "front");
     car.move(egoVelocity, timestamp);
     car.render(viewer);
+
+    if (!visualize_pcd) {}
+
+    if (trackCars[i]) {
+      Eigen::VectorXd gt(4);
+      gt << car.getPosition().x, car.getPosition().y,
+            car.getVelocity() * cos(car.getAngle()),
+            car.getVelocity() * sin(car.getAngle());
+
+      Eigen::VectorXd estimate(4);
+
+    }
+
   }
 }

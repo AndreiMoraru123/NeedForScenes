@@ -15,6 +15,6 @@ add_definitions(${PCL_DEFINITIONS})
 
 add_executable(play test_play.cpp View/camera.cpp
         Objects/car.cpp Objects/road.cpp
-        Scene/scene.cpp Tools/tools.cpp)
+        Scene/scene.cpp Toolkit/tools.cpp)
 
 target_link_libraries (play ${PCL_LIBRARIES})
