@@ -16,8 +16,8 @@ Car::Car()
       rolling_instace(0),
       front_center_distance(0),
       control_index(0),
-      sin_angle(0),
-      cos_angle(0) {}
+      sinNegAngle(0),
+      cosNegAngle(0) {}
 
 Car::Car(
     Vect3 setPosition, Vect3 setDimensions, Color setColor, float setVelocity,
@@ -33,8 +33,8 @@ Car::Car(
       front_center_distance(setFrontCenterDistance),
       name(std::move(setName)) {
   orientation = Eigen::Quaternionf(Eigen::AngleAxisf(angle, Eigen::Vector3f::UnitZ()));
-  sin_angle = sin(angle);
-  cos_angle = cos(angle);
+  sinNegAngle = sin(- angle);
+  cosNegAngle = cos(- angle);
   acceleration = 0;
   steering = 0;
   control_index = 0;
@@ -52,8 +52,8 @@ void Car::render(pcl::visualization::PCLVisualizer::Ptr& viewer) {
   viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_REPRESENTATION,
                                       pcl::visualization::PCL_VISUALIZER_REPRESENTATION_SURFACE,
                                       name);
-  viewer->addCube(Eigen::Vector3f(position.x + front_center_distance * cos_angle,
-                                  position.y + front_center_distance * sin_angle, position.z),
+  viewer->addCube(Eigen::Vector3f(position.x + front_center_distance * cosNegAngle,
+                                  position.y + front_center_distance * sinNegAngle, position.z),
                   orientation,
                   dimensions.x, dimensions.y, dimensions.z,
                   name + "front");
@@ -94,8 +94,6 @@ void Car::move(float dt, int time_us) {
   angle += velocity * steering * dt / front_center_distance;
   orientation = Eigen::Quaternionf(Eigen::AngleAxisf(angle, Eigen::Vector3f::UnitZ()));
   velocity += acceleration * dt;
-  sin_angle = sin(angle);
-  cos_angle = cos(angle);
 
   // Apply rolling instance if there is no acceleration input
   if (acceleration == 0) {
@@ -134,8 +132,8 @@ static bool inbetween(double point, double center, double range) {
 }
 
 [[nodiscard]] bool Car::checkCollision(Vect3 point) {
-  double xPrime = (point.x - position.x) * cos_angle + (point.y - position.y) * sin_angle + position.x;
-  double yPrime = -(point.x - position.x) * sin_angle + (point.y - position.y) * cos_angle + position.y;
+  double xPrime = ((point.x-position.x) * cosNegAngle - (point.y-position.y) * sinNegAngle)+position.x;
+  double yPrime = ((point.y-position.y) * cosNegAngle + (point.x-position.x) * sinNegAngle)+position.y;
   return (
               inbetween(xPrime, position.x, dimensions.x / 2) &&
               inbetween(yPrime, position.y, dimensions.y / 2) &&

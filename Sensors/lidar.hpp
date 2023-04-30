@@ -5,7 +5,6 @@
 #ifndef NFS_LIDAR_HPP
 #define NFS_LIDAR_HPP
 
-#include <cmath>
 #include "../Objects/car.hpp"
 
 

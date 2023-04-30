@@ -59,8 +59,8 @@ class Car {
   float rolling_instace;
   std::vector<Control> controls;
   int control_index;
-  double sin_angle;
-  double cos_angle;
+  double sinNegAngle;
+  double cosNegAngle;
 public:
   Car();
   Car(Vect3 setPosition, Vect3 setDimensions, Color setColor, float setVelocity,
