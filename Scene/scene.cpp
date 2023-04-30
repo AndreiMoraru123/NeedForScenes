@@ -38,6 +38,7 @@ Scene::Scene(pcl::visualization::PCLVisualizer::Ptr& viewer) {
 
 void Scene::stepScene(Car& egoCar, double egoVelocity, long long timestamp, int frame_per_sec, pcl::visualization::PCLVisualizer::Ptr& viewer) {
 
+  renderRoad(egoVelocity * timestamp / 1e6, viewer);
   egoCar.move(egoVelocity, timestamp);
   egoCar.render(viewer);
 

@@ -65,33 +65,30 @@ int main() {
   float dt = interval_us * 1e-6;
 
   Scene scene(viewer);
-  scene.stepScene(car, 0.0, 0, 0, viewer);
 
   // Main loop
   while (!viewer->wasStopped()) {
-    viewer->spinOnce(100);
 
-    // Remove the car from the viewer
-    viewer->removeShape(car_name);
-    viewer->removeShape(car_name + "front");
+    viewer->removeAllPointClouds();
+    viewer->removeAllShapes();
 
     // Update the car's acceleration and steering based on keyboard input
     float reverse_multiplier = 1;
     if (key_states["Up"]) {
-      car.accelerate(1.0);
+      car.accelerate(5.0);
     } else if (key_states["Down"]) {
-      car.accelerate(1.0);
+      car.accelerate(3.0);
       reverse_multiplier = -1;
     } else if (key_states["space"]) {
-      car.accelerate(-2.0);
+      car.accelerate(-10.0);
     } else {
       car.accelerate(0.0);
     }
 
     if (key_states["Left"]) {
-      car.steer(0.2);
+      car.steer(0.5);
     } else if (key_states["Right"]) {
-      car.steer(-0.2);
+      car.steer(-0.5);
     } else {
       car.steer(0.0);
     }
@@ -104,6 +101,7 @@ int main() {
 
     // Move the car based on controls
     scene.stepScene(car, dt * reverse_multiplier, time_us, 10, viewer);
+    viewer->spinOnce(100);
     time_us += interval_us;
 
     Vect3 car_position = car.getPosition();
