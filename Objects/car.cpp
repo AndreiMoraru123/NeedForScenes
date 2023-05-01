@@ -111,11 +111,11 @@ void Car::move(float dt, int time_us) {
   }
 }
 
-[[nodiscard]] Vect3 Car::getPosition() const {return position;}
-[[nodiscard]] std::string Car::getName() const {return name;}
-[[nodiscard]] float Car::getVelocity() const {return velocity;}
-[[nodiscard]] float Car::getAngle() const {return angle;}
-[[nodiscard]] Tracker Car::getTracker() const {return tracker;}
+[[nodiscard]] Vect3& Car::getPosition() {return position;}
+[[nodiscard]] std::string& Car::getName()  {return name;}
+[[nodiscard]] float& Car::getVelocity()  {return velocity;}
+[[nodiscard]] float& Car::getAngle()  {return angle;}
+[[nodiscard]] Tracker& Car::getTracker() {return tracker;}
 
 void Car::setTracker(const Tracker& t) {tracker = t;}
 

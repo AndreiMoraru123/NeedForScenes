@@ -48,6 +48,7 @@ public:
 };
 
 class Car {
+public:
   Vect3 position, dimensions;
   Eigen::Quaternionf orientation;
   std::string name;
@@ -68,18 +69,17 @@ public:
   Car(Vect3 setPosition, Vect3 setDimensions, Color setColor, float setVelocity,
       float setAngle, float setAcceleration, float setSteering,
       float setFrontCenterDistance, std::string setName);
-
   void render(pcl::visualization::PCLVisualizer::Ptr& viewer);
   void accelerate(float acc);
   void steer(float s);
   void control(const std::vector<Control>& c);
   void move(float dt, int time_us);
   void setTracker(const Tracker& t);
-  [[nodiscard]] Vect3 getPosition() const;
-  [[nodiscard]] float getVelocity() const;
-  [[nodiscard]] float getAngle() const;
-  [[nodiscard]] std::string getName() const;
-  [[nodiscard]] Tracker getTracker() const;
+  [[nodiscard]] Vect3& getPosition();
+  [[nodiscard]] float& getVelocity();
+  [[nodiscard]] float& getAngle();
+  [[nodiscard]] std::string& getName();
+  [[nodiscard]] Tracker& getTracker();
   [[nodiscard]] bool checkCollision(Vect3 point);
 };
 

@@ -230,7 +230,6 @@ void Tracker::updateStateMeanAndCovarianceLidar(Eigen::MatrixXd K, const Eigen::
 
 void Tracker::UpdateRadar(const MeasurementPackage& meas_package) {
   int n_z = 3;  // Measurement dimension
-
   Eigen::MatrixXd Zsig = createSigmaPointsInMeasurementSpace(n_z);
   Eigen::VectorXd z_pred = predictMeasurementMean(Zsig, n_z);
   Eigen::MatrixXd S = predictMeasurementCovariance(Zsig, z_pred, n_z);
@@ -286,15 +285,14 @@ Eigen::MatrixXd Tracker::calculateCrossCorrelation(Eigen::MatrixXd Zsig, const E
   Tc.fill(0.0);
   for (int i = 0; i < 2 * n_aug_ + 1; i++) {
     Eigen::VectorXd x_diff = Xsig_pred_.col(i) - x_;
-    while (x_diff(3) > M_PI) x_diff(3) -= 2. * M_PI;
-    while (x_diff(3) < -M_PI) x_diff(3) += 2. * M_PI;
+    x_diff(3) = atan2(sin(x_diff(3)), cos(x_diff(3)));
     Eigen::VectorXd z_diff = Zsig.col(i) - z_pred;
-    while (z_diff(1) > M_PI) z_diff(1) -= 2. * M_PI;
-    while (z_diff(1) < -M_PI) z_diff(1) += 2. * M_PI;
+    z_diff(1) = atan2(sin(z_diff(1)), cos(z_diff(1)));
     Tc = Tc + weights_(i) * x_diff * z_diff.transpose();
   }
   return Tc;
 }
+
 
 Eigen::MatrixXd Tracker::calculateKalmanGain(const Eigen::MatrixXd& Tc, const Eigen::MatrixXd& S) {
   Eigen::MatrixXd K = Tc * S.inverse();

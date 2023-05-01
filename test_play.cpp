@@ -57,7 +57,7 @@ int main() {
   CameraAngle currentAngle = FPS;
   std::vector<CameraAngle> angles = {XY, TopDown, Side, FPS};
 
-  float boundary_margin = 10.0; // Margin around the car to set as viewer boundary
+  float boundary_margin = 100.0; // Margin around the car to set as viewer boundary
   float x_min = -boundary_margin, x_max = boundary_margin;
   float y_min = -boundary_margin, y_max = boundary_margin;
   int time_us = 0;
