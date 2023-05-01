@@ -285,9 +285,9 @@ Eigen::MatrixXd Tracker::calculateCrossCorrelation(Eigen::MatrixXd Zsig, const E
   Tc.fill(0.0);
   for (int i = 0; i < 2 * n_aug_ + 1; i++) {
     Eigen::VectorXd x_diff = Xsig_pred_.col(i) - x_;
-    x_diff(3) = atan2(sin(x_diff(3)), cos(x_diff(3)));
+    x_diff(3) -= 2.0 * M_PI * std::floor((x_diff(3) + M_PI) * (1.0 / (2.0 * M_PI)));
     Eigen::VectorXd z_diff = Zsig.col(i) - z_pred;
-    z_diff(1) = atan2(sin(z_diff(1)), cos(z_diff(1)));
+    z_diff(1) -= 2.0 * M_PI * std::floor((z_diff(1) + M_PI) * (1.0 / (2.0 * M_PI)));
     Tc = Tc + weights_(i) * x_diff * z_diff.transpose();
   }
   return Tc;

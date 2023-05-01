@@ -106,7 +106,6 @@ void Tools::trackerResults(Car car, pcl::visualization::PCLVisualizer::Ptr &view
 Eigen::VectorXd Tools::calculateRMSE(
     const std::vector<Eigen::VectorXd> &estimations,
     const std::vector<Eigen::VectorXd> &groundTruth) {
-
   Eigen::VectorXd rmse(4);
   rmse << 0, 0, 0, 0;
   if (estimations.size() != groundTruth.size() || estimations.size() == 0) {

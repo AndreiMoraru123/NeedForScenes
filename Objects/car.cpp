@@ -42,9 +42,10 @@ Car::Car(
 }
 
 void Car::render(pcl::visualization::PCLVisualizer::Ptr& viewer) {
-  viewer->addCube(Eigen::Vector3f(position.x, position.y, position.z),
+  // Render bottom of the car
+  viewer->addCube(Eigen::Vector3f(position.x, position.y, dimensions.z * 1 / 3),
                   orientation,
-                  dimensions.x, dimensions.y, dimensions.z,
+                  dimensions.x, dimensions.y, dimensions.z * 2 / 3,
                   name);
   viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR,
                                       color.r, color.g, color.b,
@@ -52,6 +53,19 @@ void Car::render(pcl::visualization::PCLVisualizer::Ptr& viewer) {
   viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_REPRESENTATION,
                                       pcl::visualization::PCL_VISUALIZER_REPRESENTATION_SURFACE,
                                       name);
+  // Render top of the car
+  viewer->addCube(Eigen::Vector3f(position.x, position.y, dimensions.z * 5 / 6),
+                  orientation,
+                  dimensions.x / 2, dimensions.y, dimensions.z * 1 / 3,
+                  name + "Top");
+  viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR,
+                                      color.r, color.g, color.b,
+                                      name + "Top");
+  viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_REPRESENTATION,
+                                      pcl::visualization::PCL_VISUALIZER_REPRESENTATION_SURFACE,
+                                      name + "Top");
+
+  // Render front part of the car
   viewer->addCube(Eigen::Vector3f(position.x + front_center_distance * cosNegAngle,
                                   position.y + front_center_distance * sinNegAngle, position.z),
                   orientation,
