@@ -1,5 +1,4 @@
 #include "Objects/car.hpp"
-#include "Objects/structs.hpp"
 #include "View/camera.hpp"
 #include <pcl/visualization/pcl_visualizer.h>
 #include <unordered_map>

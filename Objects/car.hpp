@@ -4,7 +4,6 @@
 
 #ifndef NFS_CAR_HPP
 #define NFS_CAR_HPP
-#include "structs.hpp"
 #include <iostream>
 #include <pcl/visualization/pcl_visualizer.h>
 #include <string>
