@@ -79,8 +79,8 @@ void Car::render(pcl::visualization::PCLVisualizer::Ptr& viewer) {
                                       name + "front");
 }
 
-void Car::accelerate(float acc) {
-  acceleration = acc;
+void Car::accelerate(float acc, int dir) {
+  acceleration = acc * dir;
 }
 
 void Car::steer(float s) {

@@ -5,8 +5,6 @@
 #ifndef NFS_CAMERA_HPP
 #define NFS_CAMERA_HPP
 
-#pragma once
-
 #include <pcl/visualization/pcl_visualizer.h>
 
 enum CameraAngle {

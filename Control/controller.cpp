@@ -28,14 +28,13 @@ void EgoCarController::registerKeyboardCallbacks() {
 
 void EgoCarController::handleKeyboardInput() {
   if (keyStates_["Up"]) {
-    car_.accelerate(5.0);
+    car_.accelerate(5.0, 1);
   } else if (keyStates_["Down"]) {
-    car_.accelerate(3.0);
-    reverse_multiplier = -1;
+    car_.accelerate(3.0, -1);
   } else if (keyStates_["space"]) {
-    car_.accelerate(-10.0);
+    car_.accelerate(-10.0, 1);
   } else {
-    car_.accelerate(0.0);
+    car_.accelerate(0.0, 1);
   }
 
   if (keyStates_["Left"]) {
@@ -54,7 +53,7 @@ void EgoCarController::handleKeyboardInput() {
 }
 
 void EgoCarController::update(float dt, int time_us, Scene& scene) {
-  scene.stepScene(car_, dt * reverse_multiplier, time_us, 10, viewer_);
+  scene.stepScene(car_, dt, time_us, 10, viewer_);
   timeUs_ += intervalUs_;
 }
 

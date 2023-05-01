@@ -13,7 +13,6 @@
 
 class EgoCarController {
 public:
-  float reverse_multiplier = 1;
   EgoCarController(pcl::visualization::PCLVisualizer::Ptr& viewer, Car& car);
   void registerKeyboardCallbacks();
   void handleKeyboardInput();

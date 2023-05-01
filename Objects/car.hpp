@@ -69,7 +69,7 @@ public:
       float setAngle, float setAcceleration, float setSteering,
       float setFrontCenterDistance, std::string setName);
   void render(pcl::visualization::PCLVisualizer::Ptr& viewer);
-  void accelerate(float acc);
+  void accelerate(float acc, int dir = 1);
   void steer(float s);
   void control(const std::vector<Control>& c);
   void move(float dt, int time_us);
