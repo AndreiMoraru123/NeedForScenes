@@ -64,20 +64,38 @@ void Car::render(pcl::visualization::PCLVisualizer::Ptr& viewer) {
   viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_REPRESENTATION,
                                       pcl::visualization::PCL_VISUALIZER_REPRESENTATION_SURFACE,
                                       name + "Top");
-
-  // Render front part of the car
-  viewer->addCube(Eigen::Vector3f(position.x + front_center_distance * cosNegAngle,
-                                  position.y + front_center_distance * sinNegAngle, position.z),
-                  orientation,
-                  dimensions.x, dimensions.y, dimensions.z,
-                  name + "front");
-  viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR,
-                                      color.r, color.g, color.b,
-                                      name + "front");
-  viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_REPRESENTATION,
-                                      pcl::visualization::PCL_VISUALIZER_REPRESENTATION_SURFACE,
-                                      name + "front");
+  // Render wheels
+  for(int i=-1; i<=1; i+=2) {
+    for(int j=-1; j<=1; j+=2) {
+      pcl::ModelCoefficients coeffs;
+      coeffs.values.push_back(position.x + i * dimensions.x / 5); // x position
+      coeffs.values.push_back(position.y + j * dimensions.y / 2); // y position
+      coeffs.values.push_back(position.z + dimensions.z / 7); // z position
+      coeffs.values.push_back(1); // Direction x
+      coeffs.values.push_back(0); // Direction y
+      coeffs.values.push_back(0); // Direction z
+      coeffs.values.push_back(dimensions.z * 1 / 5); // Radius
+      viewer->addCylinder(coeffs, name + "Wheel" + std::to_string(i) + std::to_string(j));
+      viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR,
+                                          0, 0, 0,
+                                          name + "Wheel" + std::to_string(i) + std::to_string(j));
+    }
+  }
+  // Render windshields
+  for(int i=-1; i<=1; i+=2) {
+    viewer->addCube(Eigen::Vector3f(position.x + i * dimensions.x / 4, position.y, dimensions.z * 2 / 3),
+                    orientation,
+                    dimensions.x / 4, dimensions.y, dimensions.z / 6,
+                    name + "Windshield" + std::to_string(i));
+    viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR,
+                                        0.3, 0.7, 1.0,
+                                        name + "Windshield" + std::to_string(i));
+    viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_REPRESENTATION,
+                                        pcl::visualization::PCL_VISUALIZER_REPRESENTATION_SURFACE,
+                                        name + "Windshield" + std::to_string(i));
+  }
 }
+
 
 void Car::accelerate(float acc, int dir) {
   acceleration = acc * dir;

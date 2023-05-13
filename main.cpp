@@ -24,7 +24,6 @@ int main() {
   viewer->setCameraFieldOfView(0.8);   // Set the camera's field of view (default is 0.8)
   viewer->setCameraClipDistances(0.01, 500); // Set near and far clipping planes
 
-  // Initialize a car with position, dimensions, color, velocity, angle, acceleration, steering, and front_center_distance
   Vect3 position(-2, -3, 0);
   Vect3 dimensions(4.0, 2.0, 2.0);
   Color color(0.0, 1.0, 0.0);
@@ -34,7 +33,10 @@ int main() {
   float steering = 0.0;
   float front_center_distance = 1.0;
   std::string car_name = "egoCar";
-  Car car(position, dimensions, color, velocity, angle, acceleration, steering, front_center_distance, car_name);
+  Car car(position, dimensions, color,
+          velocity, angle, acceleration,
+          steering, front_center_distance,
+          car_name);
   EgoCarController carController(viewer, car);
   carController.registerKeyboardCallbacks();
 
@@ -61,7 +63,8 @@ int main() {
       // Set the viewer's boundary based on the car's position
       viewer->setCameraPosition(car_position.x - 10, car_position.y - 10,
                                 car_position.z + 10, car_position.x,
-                                car_position.y, car_position.z, 0, 0, 1);
+                                car_position.y, car_position.z,
+                                0, 0, 1);
       viewer->setCameraClipDistances(0.01, 500);
       // Update the boundary limits
       x_min = car_position.x - boundary_margin;
