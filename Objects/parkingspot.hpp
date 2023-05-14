@@ -17,6 +17,7 @@ public:
   [[maybe_unused]] [[nodiscard]] std::string getName() const;
   void render(pcl::visualization::PCLVisualizer::Ptr& viewer) const;
   void setName(const std::string& name);
+  bool isCarParked(Car& car) const;
 private:
   pcl::PointXYZ position_;
   double length_;

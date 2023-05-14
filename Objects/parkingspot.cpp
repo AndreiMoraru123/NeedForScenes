@@ -20,4 +20,11 @@ void ParkingSpot::render(pcl::visualization::PCLVisualizer::Ptr& viewer) const {
   viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 0.5, 0.5, 0.5, name_);
 }
 void ParkingSpot::setName(const std::string& name) { name_ = name; }
+bool ParkingSpot::isCarParked(Car& car) const {
+  Vect3 carPosition = car.getPosition();
+  bool withinX = (carPosition.x >= (position_.x - length_ / 2)) && (carPosition.x <= (position_.x + length_ / 2));
+  bool withinY = (carPosition.y >= (position_.y - width_ / 2)) && (carPosition.y <= (position_.y + width_ / 2));
+  bool withinZ = (carPosition.z >= position_.z) && (carPosition.z <= (position_.z + height_));
+  return withinX && withinY && withinZ;
+}
 

@@ -123,6 +123,9 @@ void Scene::stepScene(Car& egoCar, double egoVelocity, long long timestamp, int 
   for (const ParkingSpot& parkingSpot : parkingSpots) {
     viewer->removeShape(parkingSpot.getName());
     parkingSpot.render(viewer);
+    if(parkingSpot.isCarParked(egoCar)) {
+      viewer->addText("Parked!", 200, 200, 20, 1, 1, 1, "parkingText");
+    }
   }
 
   egoCar.move(egoVelocity, timestamp);
