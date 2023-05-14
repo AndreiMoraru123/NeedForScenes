@@ -32,18 +32,20 @@ radarMarker Tools::radarSense(Car& car, Car ego, pcl::visualization::PCLVisualiz
   double rho = sqrt((car.getPosition().x - ego.getPosition().x) * (car.getPosition().x - ego.getPosition().x) +
                     (car.getPosition().y - ego.getPosition().y) * (car.getPosition().y - ego.getPosition().y));
   double phi = atan2(car.getPosition().y - ego.getPosition().y, car.getPosition().x - ego.getPosition().x);
-  double rhotDot = (car.getVelocity() * cos(car.getAngle()) * rho * cos(phi) +
+  double rhoDot = (car.getVelocity() * cos(car.getAngle()) * rho * cos(phi) +
                     car.getVelocity() * sin(car.getAngle()) * rho * sin(phi)) / rho;
 
   radarMarker marker = radarMarker(
       rho + noise(0.3, timestamp + 2),
       phi + noise(0.03, timestamp + 3),
-      rhotDot + noise(0.3, timestamp + 4));
+      rhoDot + noise(0.3, timestamp + 4));
 
 if (visualize) {
     viewer->addLine(pcl::PointXYZ(ego.getPosition().x, ego.getPosition().y, 3.0),
-                    pcl::PointXYZ(car.getPosition().x, car.getPosition().y, 3.0),
-                    1, 0, 0, car.getName() + "_rho");
+                    pcl::PointXYZ(ego.getPosition().x + marker.rho * cos(marker.phi),
+                                    ego.getPosition().y + marker.rho *sin(marker.phi),
+                                    3.0),
+                    1, 0, 1, car.getName() + "_rho");
     viewer->addArrow(
         pcl::PointXYZ(
             ego.getPosition().x + marker.rho * cos (marker.phi),
@@ -51,10 +53,10 @@ if (visualize) {
             3.0
             ),
         pcl::PointXYZ(
-            car.getPosition().x + marker.rho * cos(marker.phi) + marker.rhoDot * cos(marker.phi),
+            ego.getPosition().x + marker.rho * cos(marker.phi) + marker.rhoDot * cos(marker.phi),
             ego.getPosition().y + marker.rho * sin(marker.phi) + marker.rhoDot * sin(marker.phi),
             3.0
-            ), 1, 0, 0, car.getName() + "_rhoDot");
+            ), 1, 0, 1, car.getName() + "_rhoDot");
   }
 
   MeasurementPackage measPackage;

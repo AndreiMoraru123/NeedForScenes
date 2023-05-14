@@ -18,7 +18,7 @@ struct lidarMarker {
 
 struct radarMarker {
   double rho, phi, rhoDot;
-  radarMarker(double rho, double phi, double rho_dot) : rho(rho), phi(phi), rhoDot(rhoDot) {}
+  radarMarker(double rho, double phi, double rhoDot) : rho(rho), phi(phi), rhoDot(rhoDot) {}
 };
 
 class Tools {
