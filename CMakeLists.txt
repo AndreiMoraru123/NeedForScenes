@@ -16,6 +16,7 @@ add_executable(play main.cpp Objects/obstacle.cpp
         View/camera.cpp Control/controller.cpp
         Objects/car.cpp Objects/road.cpp
         Scene/scene.cpp Toolkit/tools.cpp
-        Algo/tracker.cpp Sensors/lidar.cpp)
+        Algo/tracker.cpp Sensors/lidar.cpp
+        Objects/parkingspot.cpp)
 
 target_link_libraries (play ${PCL_LIBRARIES})

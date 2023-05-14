@@ -12,6 +12,7 @@ Scene::Scene(pcl::visualization::PCLVisualizer::Ptr& viewer) {
   std::uniform_real_distribution<> disPos(-35.0, 35.0);
   std::uniform_real_distribution<> disDim(1.5, 2.0);
 
+  // Generate obstacles
   for (int i = 0; i <= 5; ++i) {
     Vect3 position(disPos(gen), disPos(gen), 0.0);
     Vect3 dimensions(disDim(gen), disDim(gen), disDim(gen));
@@ -19,6 +20,16 @@ Scene::Scene(pcl::visualization::PCLVisualizer::Ptr& viewer) {
     obstacle.setName("obstacle" + std::to_string(i));
     obstacles.push_back(obstacle);
   }
+
+  // Generate parking spots
+  parkingSpots.emplace_back(pcl::PointXYZ(-30, -30, 0), 4.0, 2.0, 0.1, 1);
+  parkingSpots.back().setName("parkingSpot1");
+  parkingSpots.emplace_back(pcl::PointXYZ(-30, 30, 0), 4.0, 2.0, 0.1, 2);
+  parkingSpots.back().setName("parkingSpot2");
+  parkingSpots.emplace_back(pcl::PointXYZ(30, -30, 0), 4.0, 2.0, 0.1, 3);
+  parkingSpots.back().setName("parkingSpot3");
+  parkingSpots.emplace_back(pcl::PointXYZ(30, 30, 0), 4.0, 2.0, 0.1, 4);
+  parkingSpots.back().setName("parkingSpot4");
 
   Car car1 = Car(
       Vect3(-10, 4, 0),
@@ -108,6 +119,12 @@ Scene::Scene(pcl::visualization::PCLVisualizer::Ptr& viewer) {
 void Scene::stepScene(Car& egoCar, double egoVelocity, long long timestamp, int frame_per_sec, pcl::visualization::PCLVisualizer::Ptr& viewer) {
 
   renderRoad(egoVelocity * timestamp / 1e6, viewer);
+
+  for (const ParkingSpot& parkingSpot : parkingSpots) {
+    viewer->removeShape(parkingSpot.getName());
+    parkingSpot.render(viewer);
+  }
+
   egoCar.move(egoVelocity, timestamp);
   egoCar.render(viewer);
 

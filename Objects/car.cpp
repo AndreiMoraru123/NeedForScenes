@@ -125,7 +125,6 @@ void Car::move(float dt, int time_us) {
 
   position.x += velocity * cos(angle) * dt;
   position.y += velocity * sin(angle) * dt;
-
   angle += velocity * steering * dt / front_center_distance;
   orientation = Eigen::Quaternionf(Eigen::AngleAxisf(angle, Eigen::Vector3f::UnitZ()));
   velocity += acceleration * dt;
@@ -164,7 +163,7 @@ static bool inbetween(double point, double center, double range) {
   return point >= center - range && point <= center + range;
 }
 
-[[nodiscard]] bool Car::checkCollision(Vect3 point) {
+[[nodiscard]] bool Car::checkCollision(Vect3 point) const {
   double xPrime = ((point.x-position.x) * cosNegAngle - (point.y-position.y) * sinNegAngle)+position.x;
   double yPrime = ((point.y-position.y) * cosNegAngle + (point.x-position.x) * sinNegAngle)+position.y;
   return (

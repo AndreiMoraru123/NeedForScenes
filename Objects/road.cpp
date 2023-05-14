@@ -39,46 +39,53 @@ void renderRoad(double distancePos, pcl::visualization::PCLVisualizer::Ptr& view
     viewer->addCylinder(poleCoeffs, "pole" + std::to_string(angle));
     viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 1, 0.5, 0, "pole" + std::to_string(angle)); // Orange poles
   }
-  // Add parking spots
-  std::vector<pcl::PointXYZ> parkingSpots = {
-      pcl::PointXYZ(-30, -30, 0),
-      pcl::PointXYZ(-30, 30, 0),
-      pcl::PointXYZ(30, -30, 0),
-      pcl::PointXYZ(30, 30, 0)
+  // Add dummy parking spots
+  std::vector<pcl::PointXYZ> dummyParkingSpots = {
+      pcl::PointXYZ(-15, -30, 0),
+      pcl::PointXYZ(-15, 30, 0),
+      pcl::PointXYZ(15, -30, 0),
+      pcl::PointXYZ(15, 30, 0)
   };
 
-  for (size_t i = 0; i < parkingSpots.size(); ++i) {
-    pcl::PointXYZ location = parkingSpots[i];
+  for (size_t i = 0; i < dummyParkingSpots.size(); ++i) {
+    pcl::PointXYZ location = dummyParkingSpots[i];
     double parkingSpotWidth = 2.0;
     double parkingSpotLength = 4.0;
     double parkingSpotHeight = 0.1;
     viewer->addCube(location.x - parkingSpotLength / 2, location.x + parkingSpotLength / 2,
                     location.y - parkingSpotWidth / 2, location.y + parkingSpotWidth / 2,
                     location.z, location.z + parkingSpotHeight,
-                    0.5, 0.5, 0.5, "parkingSpot" + std::to_string(i));
+                    0.5, 0.5, 0.5, "dummyParkingSpot" + std::to_string(i));
   }
-  // Add obstacle poles
-  std::vector<pcl::PointXYZ> obstaclePoles = {
-      pcl::PointXYZ(-20, -20, 0),
-      pcl::PointXYZ(-20, 20, 0),
-      pcl::PointXYZ(20, -20, 0),
-      pcl::PointXYZ(20, 20, 0)
+  // Add dummy obstacles
+  std::vector<pcl::PointXYZ> dummyObstacles = {
+      pcl::PointXYZ(-15, -15, 0),
+      pcl::PointXYZ(-15, 15, 0),
+      pcl::PointXYZ(15, -15, 0),
+      pcl::PointXYZ(15, 15, 0)
   };
 
-  float obstaclePoleRadius = 1.0; // radius of the obstacle poles
-  for (size_t i = 0; i < obstaclePoles.size(); ++i) {
-    pcl::PointXYZ location = obstaclePoles[i];
-    pcl::ModelCoefficients poleCoeffs;
-    poleCoeffs.values.resize(7);
-    poleCoeffs.values[0] = location.x; // x position
-    poleCoeffs.values[1] = location.y; // y position
-    poleCoeffs.values[2] = 0; // z position
-    poleCoeffs.values[3] = 0; // direction x
-    poleCoeffs.values[4] = 0; // direction y
-    poleCoeffs.values[5] = 1; // direction z
-    poleCoeffs.values[6] = obstaclePoleRadius; // radius
-    viewer->addCylinder(poleCoeffs, "obstaclePole" + std::to_string(i));
-    viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 1, 0, 0, "obstaclePole" + std::to_string(i)); // Red poles
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  std::uniform_real_distribution<> disPos(-35.0, 35.0);
+  std::uniform_real_distribution<> disDim(1.5, 2.0);
+
+  for (size_t i = 0; i < dummyObstacles.size(); ++i) {
+    pcl::PointXYZ location = dummyObstacles[i];
+    pcl::ModelCoefficients obstacleCoeffs;
+    obstacleCoeffs.values.resize(7);
+    obstacleCoeffs.values[0] = location.x; // x position
+    obstacleCoeffs.values[1] = location.y; // y position
+    obstacleCoeffs.values[2] = 0; // z position
+    obstacleCoeffs.values[3] = 0; // direction x
+    obstacleCoeffs.values[4] = 0; // direction y
+    obstacleCoeffs.values[5] = 1; // direction z
+    obstacleCoeffs.values[6] = disDim(gen); // dimensions
+    viewer->addCube(location.x, location.x + disDim(gen),
+                    location.y, location.y + disDim(gen),
+                    location.z, location.z + disDim(gen),
+                    1, 1, 0, "dummyObstacle" + std::to_string(i));
+    viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 1, 1, 0, "dummyObstacle" + std::to_string(i));
   }
 }
 

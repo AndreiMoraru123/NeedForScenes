@@ -3,6 +3,7 @@
 //
 #include <pcl/visualization/pcl_visualizer.h>
 #include "car.hpp"
+#include <random>
 
 #ifndef NFS_ROAD_HPP
 #define NFS_ROAD_HPP

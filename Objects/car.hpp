@@ -86,7 +86,7 @@ public:
   [[nodiscard]] std::string& getName();
   [[nodiscard]] Tracker& getTracker();
   [[nodiscard]] Vect3 getDirection();
-  [[nodiscard]] bool checkCollision(Vect3 point);
+  [[nodiscard]] bool checkCollision(Vect3 point) const;
 };
 
 #endif // NFS_CAR_HPP
