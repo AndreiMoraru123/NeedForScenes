@@ -8,7 +8,7 @@
 #define NFS_ROAD_HPP
 
 void renderRoad(double distancePos, pcl::visualization::PCLVisualizer::Ptr& viewer);
-void renderPointCloud(pcl::visualization::PCLVisualizer::Ptr& viewer, const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud, std::string name, Color color = Color(1, 1, 1));
+void renderPointCloud(pcl::visualization::PCLVisualizer::Ptr& viewer, const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud, const std::string& name, Color color = Color(1, 1, 1));
 
 
 #endif // NFS_ROAD_HPP

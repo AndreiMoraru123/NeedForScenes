@@ -72,7 +72,7 @@ public:
   Car(Vect3 setPosition, Vect3 setDimensions, Color setColor, float setVelocity,
       float setAngle, float setAcceleration, float setSteering,
       float setFrontCenterDistance, std::string setName);
-  void render(pcl::visualization::PCLVisualizer::Ptr& viewer);
+  void render(pcl::visualization::PCLVisualizer::Ptr& viewer) const;
   void accelerate(float acc, int dir = 1);
   void steer(float s);
   void control(const std::vector<Control>& c);

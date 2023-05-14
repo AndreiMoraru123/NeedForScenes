@@ -27,7 +27,7 @@ int main() {
   Vect3 dimensions(4.0, 2.0, 2.0);
   Color color(0.0, 1.0, 0.0);
   float velocity = 0.0;
-  float angle = 0.0;
+  float angle = -180.0;
   float acceleration = 0.0;
   float steering = 0.0;
   float front_center_distance = 1.0;

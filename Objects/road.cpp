@@ -34,7 +34,7 @@ void renderRoad(double distancePos, pcl::visualization::PCLVisualizer::Ptr& view
     poleCoeffs.values[2] = 0; // z position
     poleCoeffs.values[3] = 0; // direction x
     poleCoeffs.values[4] = 0; // direction y
-    poleCoeffs.values[5] = 1; // direction z
+    poleCoeffs.values[5] = poleHeight; // direction z
     poleCoeffs.values[6] = poleRadius; // radius
     viewer->addCylinder(poleCoeffs, "pole" + std::to_string(angle));
     viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 1, 0.5, 0, "pole" + std::to_string(angle)); // Orange poles
@@ -83,7 +83,7 @@ void renderRoad(double distancePos, pcl::visualization::PCLVisualizer::Ptr& view
 }
 
 
-void renderPointCloud(pcl::visualization::PCLVisualizer::Ptr& viewer, const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud, std::string name, Color color) {
+void renderPointCloud(pcl::visualization::PCLVisualizer::Ptr& viewer, const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud, const std::string& name, Color color) {
   viewer->addPointCloud<pcl::PointXYZ>(cloud, name);
   viewer->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 4, name);
   viewer->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, color.r, color.g, color.b, name);

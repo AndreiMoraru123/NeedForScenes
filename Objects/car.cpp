@@ -41,7 +41,7 @@ Car::Car(
   rolling_instace = 0.02;
 }
 
-void Car::render(pcl::visualization::PCLVisualizer::Ptr& viewer) {
+void Car::render(pcl::visualization::PCLVisualizer::Ptr& viewer) const {
   // Render bottom of the car
   viewer->addCube(Eigen::Vector3f(position.x, position.y, dimensions.z * 1 / 3),
                   orientation,

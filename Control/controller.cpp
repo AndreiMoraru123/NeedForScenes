@@ -32,7 +32,7 @@ void EgoCarController::handleKeyboardInput() {
   } else if (keyStates_["Down"]) {
     car_.accelerate(3.0, -1);
   } else if (keyStates_["space"]) {
-    car_.accelerate(-10.0, 1);
+    car_.accelerate(-15.0, 1);
   } else {
     car_.accelerate(0.0, 1);
   }
