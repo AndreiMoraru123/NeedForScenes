@@ -148,8 +148,14 @@ void Car::move(float dt, int time_us) {
 [[nodiscard]] float& Car::getVelocity()  {return velocity;}
 [[nodiscard]] float& Car::getAngle()  {return angle;}
 [[nodiscard]] Tracker& Car::getTracker() {return tracker;}
+[[nodiscard]] Vect3 Car:: getDirection() {
+  float angle = getAngle();
+  return {cos(angle), sin(angle), 0.0f};
+}
 
 void Car::setTracker(const Tracker& t) {tracker = t;}
+void Car::setPosition(const Vect3 &p) {position = p;}
+void Car::setVelocity(float v) {velocity = v;}
 
 static bool inbetween(double point, double center, double range) {
   return point >= center - range && point <= center + range;

@@ -42,6 +42,9 @@ void Scene::stepScene(Car& egoCar, double egoVelocity, long long timestamp, int 
   egoCar.move(egoVelocity, timestamp);
   egoCar.render(viewer);
 
+  Car predictedEgoCar = egoCar;
+  predictedEgoCar.move(egoVelocity, timestamp);
+
   for (size_t i = 0; i < traffic.size(); ++i) {
     Car& car = traffic[i];
     viewer->removeShape(car.getName());
@@ -68,6 +71,15 @@ void Scene::stepScene(Car& egoCar, double egoVelocity, long long timestamp, int 
       double vy = sin(yaw)*v;
       estimate << traffic[i].getTracker().x_[0], traffic[i].getTracker().x_[1], vx, vy;
       tools.estimations.push_back(estimate);
+
+      Car estimatedCar = car;
+      estimatedCar.setPosition(Vect3(estimate[0], estimate[1], car.getPosition().z));
+      if (predictedEgoCar.checkCollision(estimatedCar.getPosition())) {
+        egoCar.setVelocity(0.0);
+        Vect3 currentPos = egoCar.getPosition();
+        Vect3 backStep = egoCar.getDirection() * -0.5;
+        egoCar.setPosition(currentPos + backStep);
+      }
     }
   }
 
@@ -114,4 +126,13 @@ void Scene::stepScene(Car& egoCar, double egoVelocity, long long timestamp, int 
     if(rmseFailLog[3] > 0)
       viewer->addText("Vy: "+std::to_string(rmseFailLog[3]), 30, 50, 20, 1, 0, 0, "rmse_fail_vy");
   }
+}
+
+bool Scene::checkTrafficCollision(Car& egoCar) {
+  for (Car& car : traffic) {
+    if (egoCar.checkCollision(car.getPosition())) {
+      return true;
+    }
+  }
+  return false;
 }

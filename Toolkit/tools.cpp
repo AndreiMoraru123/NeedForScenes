@@ -124,12 +124,12 @@ Eigen::VectorXd Tools::calculateRMSE(
   return rmse;
 }
 
-void Tools::savePcd(typename pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, std::string filename) {
+void Tools::savePcd(const typename pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud, std::string filename) {
   pcl::io::savePCDFileASCII(filename, *cloud);
   std::cerr << "Saved " << cloud->points.size() << " data points to " << filename << std::endl;
 }
 
-pcl::PointCloud<pcl::PointXYZ>::Ptr Tools::loadPcd(std::string file) {
+pcl::PointCloud<pcl::PointXYZ>::Ptr Tools::loadPcd(const std::string& file) {
   pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
   if (pcl::io::loadPCDFile<pcl::PointXYZ>(file, *cloud) == -1) {
     PCL_ERROR("Couldn't read file \n");

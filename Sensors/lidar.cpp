@@ -33,7 +33,7 @@ void Ray::rayCast(const std::vector<Car>& cars, double minDistance, double maxDi
     double rx = ((double) rand() / (RAND_MAX));
     double ry = ((double) rand() / (RAND_MAX));
     double rz = ((double) rand() / (RAND_MAX));
-    cloud->points.push_back(pcl::PointXYZ(castPosition.x+rx*stdErr, castPosition.y+ry*stdErr, castPosition.z+rz*stdErr));
+    cloud->points.emplace_back(castPosition.x+rx*stdErr, castPosition.y+ry*stdErr, castPosition.z+rz*stdErr);
   }
 }
 

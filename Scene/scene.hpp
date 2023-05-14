@@ -25,6 +25,7 @@ public:
 
   explicit Scene(pcl::visualization::PCLVisualizer::Ptr& viewer);
   void stepScene(Car& egoCar, double egoVelocity, long long timestamp, int frame_per_sec, pcl::visualization::PCLVisualizer::Ptr& viewer);
+  bool checkTrafficCollision(Car& egoCar);
 };
 
 #endif // NFS_SCENE_HPP

@@ -60,3 +60,8 @@ void EgoCarController::update(float dt, int time_us, Scene& scene) {
 void EgoCarController::changeView(CameraAngle angle) {
   changeCameraView(angle, viewer_);
 }
+
+void EgoCarController::stop() {
+  car_.accelerate(0.0, 1);
+  car_.steer(0.0);
+}

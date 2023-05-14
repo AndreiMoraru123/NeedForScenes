@@ -17,6 +17,7 @@ public:
   void registerKeyboardCallbacks();
   void handleKeyboardInput();
   void update(float dt, int time_us, Scene& scene);
+  void stop();
 private:
   pcl::visualization::PCLVisualizer::Ptr viewer_;
   Car& car_;

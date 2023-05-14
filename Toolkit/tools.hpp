@@ -32,7 +32,7 @@ public:
   radarMarker radarSense(Car& car, Car ego, pcl::visualization::PCLVisualizer::Ptr& viewer, long long timestamp, bool visualize);
   void trackerResults(Car car, pcl::visualization::PCLVisualizer::Ptr& viewer, double time, int steps);
   Eigen::VectorXd calculateRMSE(const std::vector<Eigen::VectorXd>& estimations, const std::vector<Eigen::VectorXd>& groundTruth);
-  void savePcd(typename pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, std::string file);
-  pcl::PointCloud<pcl::PointXYZ>::Ptr loadPcd(std::string file);
+  void savePcd(const typename pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud, std::string file);
+  pcl::PointCloud<pcl::PointXYZ>::Ptr loadPcd(const std::string& file);
 };
 #endif // NFS_TOOLS_HPP

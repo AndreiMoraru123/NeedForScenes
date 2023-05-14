@@ -72,5 +72,9 @@ int main() {
       y_min = car_position.y - boundary_margin;
       y_max = car_position.y + boundary_margin;
     }
+
+    if (scene.checkTrafficCollision(car)) {
+      carController.stop();
+    }
   }
 }

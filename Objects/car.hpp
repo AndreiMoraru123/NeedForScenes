@@ -34,6 +34,10 @@ public:
     Vect3 result(x + vec.x, y + vec.y, z + vec.z);
     return result;
   }
+  Vect3 operator * (const float& scalar) const {
+    Vect3 result(x * scalar, y * scalar, z * scalar);
+    return result;
+  }
 };
 
 class Control {
@@ -74,11 +78,14 @@ public:
   void control(const std::vector<Control>& c);
   void move(float dt, int time_us);
   void setTracker(const Tracker& t);
+  void setPosition(const Vect3& p);
+  void setVelocity(float v);
   [[nodiscard]] Vect3& getPosition();
   [[nodiscard]] float& getVelocity();
   [[nodiscard]] float& getAngle();
   [[nodiscard]] std::string& getName();
   [[nodiscard]] Tracker& getTracker();
+  [[nodiscard]] Vect3 getDirection();
   [[nodiscard]] bool checkCollision(Vect3 point);
 };
 
