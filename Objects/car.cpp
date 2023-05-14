@@ -83,10 +83,13 @@ void Car::render(pcl::visualization::PCLVisualizer::Ptr& viewer) {
   }
   // Render windshields
   for(int i=-1; i<=1; i+=2) {
-    viewer->addCube(Eigen::Vector3f(position.x + i * dimensions.x / 4, position.y, dimensions.z * 2 / 3),
-                    orientation,
-                    dimensions.x / 4, dimensions.y, dimensions.z / 6,
-                    name + "Windshield" + std::to_string(i));
+    Eigen::Vector3f localPosition(i * dimensions.x / 4, 0, dimensions.z * 2 / 3);
+    Eigen::Quaternionf quaternion(orientation);
+    Eigen::AngleAxisf rotation(quaternion);
+    Eigen::Vector3f rotatedPosition = rotation * localPosition;
+    Eigen::Vector3f positionEigen(position.x, position.y, position.z);
+    Eigen::Vector3f globalPosition = positionEigen + rotatedPosition;
+    viewer->addCube(globalPosition, quaternion, dimensions.x / 4, dimensions.y, dimensions.z / 6, name + "Windshield" + std::to_string(i));
     viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR,
                                         0.3, 0.7, 1.0,
                                         name + "Windshield" + std::to_string(i));
