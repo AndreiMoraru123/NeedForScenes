@@ -15,14 +15,13 @@ int main() {
   int* screenSize = viewer->getRenderWindow()->GetScreenSize();
   viewer->setSize(screenSize[0], screenSize[1]);
 
-  // Set up the camera
   // Set the viewer's camera position and adjust clipping planes
-  viewer->setCameraPosition(0, 0, 50,   // Camera position
-                            0, 0, 0,    // Focal point
-                            0, 1, 0,    // View up direction
-                            0);         // Set camera viewpoint to (0, 0, 0)
-  viewer->setCameraFieldOfView(0.8);   // Set the camera's field of view (default is 0.8)
-  viewer->setCameraClipDistances(0.01, 500); // Set near and far clipping planes
+  viewer->setCameraPosition(50, 50, 50,  // Camera position
+                            0, 0, 0,     // Focal point (origin)
+                            0, 0, 1,     // View up direction
+                            0);          // Set camera viewpoint to (0, 0, 0)
+  viewer->setCameraFieldOfView(0.8);
+  viewer->setCameraClipDistances(0.01, 500);
 
   Vect3 position(-2, -3, 0);
   Vect3 dimensions(4.0, 2.0, 2.0);

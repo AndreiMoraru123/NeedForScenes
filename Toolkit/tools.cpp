@@ -16,7 +16,7 @@ double Tools::noise(double stdDev, long long seedNum) {
 
 lidarMarker Tools::lidarSense(Car& car, pcl::visualization::PCLVisualizer::Ptr& viewer, long long timestamp, bool visualize) {
   MeasurementPackage measPackage;
-  measPackage.sensorType = MeasurementPackage::LASER;
+  measPackage.sensorType = MeasurementPackage::LIDAR;
   measPackage.rawMeasurements = Eigen::VectorXd(2);
   lidarMarker marker = lidarMarker(car.getPosition().x + noise(0.15, timestamp), car.getPosition().y + noise(0.15, timestamp + 1));
   if (visualize) {

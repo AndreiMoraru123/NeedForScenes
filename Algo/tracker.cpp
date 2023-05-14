@@ -35,7 +35,7 @@ Tracker::~Tracker() = default;
 void Tracker::ProcessMeasurement(MeasurementPackage meas_package) {
   if (!is_initialized_) {
     // Initializing differs depending on the first sensor that hits the cars
-    if (meas_package.sensorType == MeasurementPackage::SensorType::LASER) {
+    if (meas_package.sensorType == MeasurementPackage::SensorType::LIDAR) {
       x_ << meas_package.rawMeasurements[0], meas_package.rawMeasurements[1], 0, 0, 0;
       P_ = Eigen::MatrixXd::Identity(5, 5);
       P_(0,0) = std_laspx_ * std_laspx_;
@@ -61,7 +61,7 @@ void Tracker::ProcessMeasurement(MeasurementPackage meas_package) {
   // Predict the next state & covariance
   Prediction(dt);
   // Update the state & covariance
-  if (meas_package.sensorType == MeasurementPackage::SensorType::LASER) {
+  if (meas_package.sensorType == MeasurementPackage::SensorType::LIDAR) {
     UpdateLidar(meas_package);
   }
   // Both sensors can be used in an iteration if both measurements are available
