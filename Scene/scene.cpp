@@ -9,11 +9,11 @@ Scene::Scene(pcl::visualization::PCLVisualizer::Ptr& viewer) {
   tools = Tools();
   std::random_device rd;
   std::mt19937 gen(rd());
-  std::uniform_real_distribution<> disPos(-25.0, 25.0);  // For x and y positions
-  std::uniform_real_distribution<> disDim(0.5, 1.5);  // For dimensions (make sure the obstacles are visible)
+  std::uniform_real_distribution<> disPos(-35.0, 35.0);
+  std::uniform_real_distribution<> disDim(1.5, 2.0);
 
-  for (int i = 0; i <= 10; ++i) {
-    Vect3 position(disPos(gen), disPos(gen), 0.0);  // Z position is set to 0
+  for (int i = 0; i <= 5; ++i) {
+    Vect3 position(disPos(gen), disPos(gen), 0.0);
     Vect3 dimensions(disDim(gen), disDim(gen), disDim(gen));
     Obstacle obstacle(position, dimensions, i);
     obstacle.setName("obstacle" + std::to_string(i));
@@ -142,7 +142,7 @@ void Scene::stepScene(Car& egoCar, double egoVelocity, long long timestamp, int 
 
       tools.groundTruth.push_back(gt);
       tools.lidarSense(car, viewer, timestamp, visualize_lidar);
-      tools.radarSense(egoCar, car, viewer, timestamp, visualize_radar);
+      tools.radarSense(car, egoCar, viewer, timestamp, visualize_radar);
       tools.trackerResults(car, viewer, projectedTime, projectedSteps);
       Eigen::VectorXd estimate(4);
       double v = traffic[i].getTracker().x_(2);
@@ -164,7 +164,7 @@ void Scene::stepScene(Car& egoCar, double egoVelocity, long long timestamp, int 
   }
 
   viewer->addText("Accuracy - RMSE:", 30, 300, 20, 1, 1, 1, "rmse");
-  Eigen::VectorXd rmse = tools.calculateRMSE(tools.estimations, tools.groundTruth);
+  Eigen::VectorXd rmse = Tools::calculateRMSE(tools.estimations, tools.groundTruth);
   viewer->addText(" X: " + std::to_string(rmse[0]), 30, 275, 20, 1, 1, 1, "rmse_x");
   viewer->addText(" Y: " + std::to_string(rmse[1]), 30, 250, 20, 1, 1, 1, "rmse_y");
   viewer->addText("Vx: " + std::to_string(rmse[2]), 30, 225, 20, 1, 1, 1, "rmse_vx");

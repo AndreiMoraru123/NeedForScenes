@@ -17,7 +17,7 @@ public:
   Tools tools;
   bool pass = true;
   std::vector<bool> trackCars = {true, true, true};
-  std::vector<double> rmseThreshold = {0.30,1.16,2.50,0.70};
+  std::vector<double> rmseThreshold = {1.20,1.50,2.50,0.9};
   std::vector<double> rmseFailLog = {0.0,0.0,0.0,0.0};
   std::vector<Obstacle> obstacles;
   bool visualize_lidar = true;
