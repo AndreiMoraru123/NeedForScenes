@@ -7,10 +7,7 @@
 
 #include <pcl/visualization/pcl_visualizer.h>
 
-enum CameraAngle {
-  XY, TopDown, Side, FPS
-};
-
+enum CameraAngle {XY, TopDown, Side, FPS};
 void changeCameraView(CameraAngle setAngle, pcl::visualization::PCLVisualizer::Ptr& viewer);
 
 #endif // NFS_CAMERA_HPP

@@ -6,6 +6,19 @@
 
 Scene::Scene(pcl::visualization::PCLVisualizer::Ptr& viewer) {
 
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  std::uniform_real_distribution<> disPos(-25.0, 25.0);  // For x and y positions
+  std::uniform_real_distribution<> disDim(0.5, 1.5);  // For dimensions (make sure the obstacles are visible)
+
+  for (int i = 0; i <= 10; ++i) {
+    Vect3 position(disPos(gen), disPos(gen), 0.0);  // Z position is set to 0
+    Vect3 dimensions(disDim(gen), disDim(gen), disDim(gen));
+    Obstacle obstacle(position, dimensions, i);
+    obstacle.setName("obstacle" + std::to_string(i));
+    obstacles.push_back(obstacle);
+  }
+
   tools = Tools();
   Car car1 = Car(
       Vect3(-10, 4, 0),
@@ -44,6 +57,17 @@ void Scene::stepScene(Car& egoCar, double egoVelocity, long long timestamp, int 
 
   Car predictedEgoCar = egoCar;
   predictedEgoCar.move(egoVelocity, timestamp);
+
+  for (const Obstacle& obstacle: obstacles) {
+    viewer->removeShape(obstacle.getName());
+    obstacle.render(viewer);
+    if (obstacle.checkCollision(predictedEgoCar)) {
+      egoCar.setVelocity(0.0);
+      Vect3 currentPos = egoCar.getPosition();
+      Vect3 backStep = egoCar.getDirection() * -0.5;
+      egoCar.setPosition(currentPos + backStep);
+    }
+  }
 
   for (size_t i = 0; i < traffic.size(); ++i) {
     Car& car = traffic[i];
