@@ -6,6 +6,7 @@
 
 Scene::Scene(pcl::visualization::PCLVisualizer::Ptr& viewer) {
 
+  tools = Tools();
   std::random_device rd;
   std::mt19937 gen(rd());
   std::uniform_real_distribution<> disPos(-25.0, 25.0);  // For x and y positions
@@ -19,7 +20,6 @@ Scene::Scene(pcl::visualization::PCLVisualizer::Ptr& viewer) {
     obstacles.push_back(obstacle);
   }
 
-  tools = Tools();
   Car car1 = Car(
       Vect3(-10, 4, 0),
       Vect3(4, 2, 2),
@@ -44,9 +44,65 @@ Scene::Scene(pcl::visualization::PCLVisualizer::Ptr& viewer) {
     Tracker tracker1;
     car1.setTracker(tracker1);
   }
+  Car car2 = Car(
+      Vect3(25, -40, 0),
+      Vect3(4, 2, 2),
+      Color(0, 0, 1),
+      -6, 0, 2,
+      2, 2,
+      "car2"
+  );
+
+  std::vector<Control> car2_instructions;
+  a = Control(4.0*1e6, 3.0, 0.0);
+  car2_instructions.push_back(a);
+  a = Control(8.0*1e6, 0.0, 0.0);
+  car2_instructions.push_back(a);
+  car2.control(car2_instructions);
+
+  if (trackCars[1]) {
+    Tracker tracker2;
+    car2.setTracker(tracker2);
+  }
+
+  Car car3 = Car(
+      Vect3(-12, 30, 0),
+      Vect3(4, 2, 2),
+      Color(0, 0, 1),
+      1, 0, 2,
+      2, 2,
+      "car3"
+  );
+
+  std::vector<Control> car3_instructions;
+  a = Control(0.5*1e6, 2.0, 1.0);
+  car3_instructions.push_back(a);
+  a = Control(1.0*1e6, 2.5, 0.0);
+  car3_instructions.push_back(a);
+  a = Control(3.2*1e6, 0.0, -1.0);
+  car3_instructions.push_back(a);
+  a = Control(3.3*1e6, 2.0, 0.0);
+  car3_instructions.push_back(a);
+  a = Control(4.5*1e6, 0.0, 0.0);
+  car3_instructions.push_back(a);
+  a = Control(5.5*1e6, -2.0, 0.0);
+  car3_instructions.push_back(a);
+  a = Control(7.5*1e6, 0.0, 0.0);
+  car3_instructions.push_back(a);
+  car3.control(car3_instructions);
+
+  if (trackCars[2]) {
+    Tracker tracker3;
+    car3.setTracker(tracker3);
+  }
+
   traffic.push_back(car1);
+  traffic.push_back(car2);
+  traffic.push_back(car3);
   renderRoad(0, viewer);
   car1.render(viewer);
+  car2.render(viewer);
+  car3.render(viewer);
 }
 
 void Scene::stepScene(Car& egoCar, double egoVelocity, long long timestamp, int frame_per_sec, pcl::visualization::PCLVisualizer::Ptr& viewer) {

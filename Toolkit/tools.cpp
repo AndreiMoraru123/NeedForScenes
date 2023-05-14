@@ -29,6 +29,10 @@ lidarMarker Tools::lidarSense(Car& car, pcl::visualization::PCLVisualizer::Ptr& 
 }
 
 radarMarker Tools::radarSense(Car& car, Car ego, pcl::visualization::PCLVisualizer::Ptr& viewer, long long timestamp, bool visualize) {
+
+  viewer->removeShape(car.getName() + "_rho");
+  viewer->removeShape(car.getName() + "_rhoDot");
+
   double rho = sqrt((car.getPosition().x - ego.getPosition().x) * (car.getPosition().x - ego.getPosition().x) +
                     (car.getPosition().y - ego.getPosition().y) * (car.getPosition().y - ego.getPosition().y));
   double phi = atan2(car.getPosition().y - ego.getPosition().y, car.getPosition().x - ego.getPosition().x);
@@ -40,23 +44,23 @@ radarMarker Tools::radarSense(Car& car, Car ego, pcl::visualization::PCLVisualiz
       phi + noise(0.03, timestamp + 3),
       rhoDot + noise(0.3, timestamp + 4));
 
-if (visualize) {
-    viewer->addLine(pcl::PointXYZ(ego.getPosition().x, ego.getPosition().y, 3.0),
-                    pcl::PointXYZ(ego.getPosition().x + marker.rho * cos(marker.phi),
-                                    ego.getPosition().y + marker.rho *sin(marker.phi),
-                                    3.0),
-                    1, 0, 1, car.getName() + "_rho");
-    viewer->addArrow(
-        pcl::PointXYZ(
-            ego.getPosition().x + marker.rho * cos (marker.phi),
-            ego.getPosition().y + marker.rho * sin(marker.phi),
-            3.0
-            ),
-        pcl::PointXYZ(
-            ego.getPosition().x + marker.rho * cos(marker.phi) + marker.rhoDot * cos(marker.phi),
-            ego.getPosition().y + marker.rho * sin(marker.phi) + marker.rhoDot * sin(marker.phi),
-            3.0
-            ), 1, 0, 1, car.getName() + "_rhoDot");
+  if (visualize) {
+      viewer->addLine(pcl::PointXYZ(ego.getPosition().x, ego.getPosition().y, 3.0),
+                      pcl::PointXYZ(ego.getPosition().x + marker.rho * cos(marker.phi),
+                                      ego.getPosition().y + marker.rho *sin(marker.phi),
+                                      3.0),
+                      1, 0, 1, car.getName() + "_rho");
+      viewer->addArrow(
+          pcl::PointXYZ(
+              ego.getPosition().x + marker.rho * cos (marker.phi),
+              ego.getPosition().y + marker.rho * sin(marker.phi),
+              3.0
+              ),
+          pcl::PointXYZ(
+              ego.getPosition().x + marker.rho * cos(marker.phi) + marker.rhoDot * cos(marker.phi),
+              ego.getPosition().y + marker.rho * sin(marker.phi) + marker.rhoDot * sin(marker.phi),
+              3.0
+              ), 1, 0, 1, car.getName() + "_rhoDot");
   }
 
   MeasurementPackage measPackage;
