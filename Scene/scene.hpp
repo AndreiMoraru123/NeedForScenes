@@ -28,7 +28,7 @@ public:
   double projectedTime = 0;
   int projectedSteps = 0;
   explicit Scene(pcl::visualization::PCLVisualizer::Ptr& viewer);
-  void stepScene(Car& egoCar, double egoVelocity, long long timestamp, int frame_per_sec, pcl::visualization::PCLVisualizer::Ptr& viewer);
+  void stepScene(Car& egoCar, double egoVelocity, long long timestamp, pcl::visualization::PCLVisualizer::Ptr& viewer);
   bool checkTrafficCollision(Car& egoCar);
 };
 

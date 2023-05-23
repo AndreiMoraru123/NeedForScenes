@@ -16,7 +16,7 @@ public:
   EgoCarController(pcl::visualization::PCLVisualizer::Ptr& viewer, Car& car);
   void registerKeyboardCallbacks();
   void handleKeyboardInput();
-  void update(float dt, int time_us, Scene& scene);
+  void update(float dt, Scene& scene);
   void stop();
 private:
   pcl::visualization::PCLVisualizer::Ptr viewer_;

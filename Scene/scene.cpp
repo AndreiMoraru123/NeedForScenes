@@ -116,7 +116,7 @@ Scene::Scene(pcl::visualization::PCLVisualizer::Ptr& viewer) {
   car3.render(viewer);
 }
 
-void Scene::stepScene(Car& egoCar, double egoVelocity, long long timestamp, int frame_per_sec, pcl::visualization::PCLVisualizer::Ptr& viewer) {
+void Scene::stepScene(Car& egoCar, double egoVelocity, long long timestamp, pcl::visualization::PCLVisualizer::Ptr& viewer) {
 
   renderRoad(egoVelocity * timestamp / 1e6, viewer);
 
@@ -138,6 +138,7 @@ void Scene::stepScene(Car& egoCar, double egoVelocity, long long timestamp, int 
     viewer->removeShape(obstacle.getName());
     obstacle.render(viewer);
     if (obstacle.checkCollision(predictedEgoCar)) {
+      viewer->addText("Crashed!", 200, 200, 20, 1, 1, 1, "collisionText");
       egoCar.setVelocity(0.0);
       Vect3 currentPos = egoCar.getPosition();
       Vect3 backStep = egoCar.getDirection() * -0.5;
@@ -175,6 +176,7 @@ void Scene::stepScene(Car& egoCar, double egoVelocity, long long timestamp, int 
       Car estimatedCar = car;
       estimatedCar.setPosition(Vect3(estimate[0], estimate[1], car.getPosition().z));
       if (predictedEgoCar.checkCollision(estimatedCar.getPosition())) {
+        viewer->addText("Crashed!", 200, 200, 20, 1, 1, 1, "collisionText");
         egoCar.setVelocity(0.0);
         Vect3 currentPos = egoCar.getPosition();
         Vect3 backStep = egoCar.getDirection() * -0.5;

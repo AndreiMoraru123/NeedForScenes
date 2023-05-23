@@ -52,7 +52,7 @@ int main() {
     viewer->removeAllPointClouds();
     viewer->removeAllShapes();
     carController.handleKeyboardInput();
-    carController.update(dt, time_us, scene);
+    carController.update(dt, scene);
     viewer->spinOnce(100);
     time_us += interval_us;
     Vect3 car_position = car.getPosition();
