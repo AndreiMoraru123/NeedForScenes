@@ -53,7 +53,7 @@ int main() {
     viewer->removeAllShapes();
     carController.handleKeyboardInput();
     carController.update(dt, scene);
-    viewer->spinOnce(100);
+    viewer->spinOnce(1);
     time_us += interval_us;
     Vect3 car_position = car.getPosition();
     
@@ -74,6 +74,18 @@ int main() {
 
     if (scene.checkTrafficCollision(car)) {
       carController.stop();
+    }
+
+    if (scene.win) {
+      int textWidth = 50;
+      int textHeight = 50;
+      int xpos = (screenSize[0] - textWidth) / 2;
+      int ypos = (screenSize[1] - textHeight);
+      int fontSize = 40;
+      double r = 1.0, g = 1.0, b = 1.0;
+      viewer->addText("You've won the game!", xpos, ypos, fontSize, r, g, b, "winning text");
+      viewer->spinOnce(3000);
+      break;
     }
   }
 }

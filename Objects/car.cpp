@@ -38,7 +38,7 @@ Car::Car(
   acceleration = 0;
   steering = 0;
   control_index = 0;
-  rolling_instace = 0.02;
+  rolling_instace = 0.2;
 }
 
 void Car::render(pcl::visualization::PCLVisualizer::Ptr& viewer) const {

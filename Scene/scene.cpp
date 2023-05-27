@@ -35,19 +35,20 @@ Scene::Scene(pcl::visualization::PCLVisualizer::Ptr& viewer) {
       Vect3(-10, 4, 0),
       Vect3(4, 2, 2),
       Color(1, 0, 0),
-      5, 0, 2,
+      10, // increased speed
+      0, 2,
       2, 2,
       "car1"
   );
 
   std::vector<Control> car1_instructions;
-  Control a = Control(0.5*1e6, 0.5, 0.0);
+  Control a = Control(0.3*1e6, 0.8, 0.3);
   car1_instructions.push_back(a);
-  a = Control(2.2*1e6, 0.0, -0.2);
+  a = Control(1.1*1e6, 0.3, -0.4);
   car1_instructions.push_back(a);
-  a = Control(3.3*1e6, 0.0, 0.2);
+  a = Control(2.2*1e6, 0.0, 0.3);
   car1_instructions.push_back(a);
-  a = Control(4.4*1e6, -2.0, 0.0);
+  a = Control(3.3*1e6, -2.5, 0.0);
   car1_instructions.push_back(a);
   car1.control(car1_instructions);
 
@@ -55,19 +56,26 @@ Scene::Scene(pcl::visualization::PCLVisualizer::Ptr& viewer) {
     Tracker tracker1;
     car1.setTracker(tracker1);
   }
+
   Car car2 = Car(
       Vect3(25, -40, 0),
       Vect3(4, 2, 2),
       Color(0, 0, 1),
-      -6, 0, 2,
+      -6, // increased speed
+      0, 2,
       2, 2,
       "car2"
   );
 
   std::vector<Control> car2_instructions;
-  a = Control(4.0*1e6, 3.0, 0.0);
   car2_instructions.push_back(a);
-  a = Control(8.0*1e6, 0.0, 0.0);
+  a = Control(4.0*1e6, 3.0, -0.3);
+  car2_instructions.push_back(a);
+  a = Control(6.0*1e6, 0.0, 0.5);
+  car2_instructions.push_back(a);
+  a = Control(8.0*1e6, -2.0, -0.3);
+  car2_instructions.push_back(a);
+  a = Control(10.0*1e6, 0.0, 0.0);
   car2_instructions.push_back(a);
   car2.control(car2_instructions);
 
@@ -76,27 +84,30 @@ Scene::Scene(pcl::visualization::PCLVisualizer::Ptr& viewer) {
     car2.setTracker(tracker2);
   }
 
+
   Car car3 = Car(
       Vect3(-12, 30, 0),
       Vect3(4, 2, 2),
-      Color(0, 0, 1),
-      1, 0, 2,
+      Color(1, 1, 1),
+      2, // Increased initial speed
+      0, 2,
       2, 2,
       "car3"
   );
 
   std::vector<Control> car3_instructions;
-  a = Control(0.5*1e6, 2.0, 1.0);
   car3_instructions.push_back(a);
-  a = Control(1.0*1e6, 2.5, 0.0);
+  a = Control(1.0*1e6, 3.5, 0.5);
   car3_instructions.push_back(a);
-  a = Control(3.2*1e6, 0.0, -1.0);
+  a = Control(2.0*1e6, 0.0, -1.5);
   car3_instructions.push_back(a);
-  a = Control(3.3*1e6, 2.0, 0.0);
+  a = Control(3.0*1e6, 3.0, 0.0);
   car3_instructions.push_back(a);
-  a = Control(4.5*1e6, 0.0, 0.0);
+  a = Control(4.0*1e6, -1.0, -0.5);
   car3_instructions.push_back(a);
-  a = Control(5.5*1e6, -2.0, 0.0);
+  a = Control(5.0*1e6, 0.0, 1.0);
+  car3_instructions.push_back(a);
+  a = Control(6.0*1e6, 2.0, 0.0);
   car3_instructions.push_back(a);
   a = Control(7.5*1e6, 0.0, 0.0);
   car3_instructions.push_back(a);
@@ -124,6 +135,7 @@ void Scene::stepScene(Car& egoCar, double egoVelocity, long long timestamp, pcl:
     viewer->removeShape(parkingSpot.getName());
     parkingSpot.render(viewer);
     if(parkingSpot.isCarParked(egoCar)) {
+      win = true;
       viewer->addText("Parked!", 200, 200, 20, 1, 1, 1, "parkingText");
     }
   }

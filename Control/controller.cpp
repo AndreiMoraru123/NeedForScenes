@@ -54,6 +54,7 @@ void EgoCarController::handleKeyboardInput() {
 
 void EgoCarController::update(float dt, Scene& scene) {
   scene.stepScene(car_, dt, 10, viewer_);
+//  if (scene.win) { stop(); }
   timeUs_ += intervalUs_;
 }
 

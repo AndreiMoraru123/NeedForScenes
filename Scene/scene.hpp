@@ -17,6 +17,7 @@ public:
   std::vector<Car> traffic;
   Tools tools;
   bool pass = true;
+  bool win = false;
   std::vector<bool> trackCars = {true, true, true};
   std::vector<double> rmseThreshold = {1.20,1.50,2.50,0.9};
   std::vector<double> rmseFailLog = {0.0,0.0,0.0,0.0};

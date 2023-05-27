@@ -19,6 +19,7 @@ Tracker::Tracker() {
   n_x_ = 5;
   n_aug_ = 7;
   lambda_ = 3 - n_x_;
+  time_us_ = 0.0;
   weights_ = Eigen::VectorXd(2 * n_aug_ + 1);
 
   for (int i = 0; i < 2 * n_aug_ + 1; i++) {
