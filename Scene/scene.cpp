@@ -8,11 +8,10 @@ Scene::Scene(pcl::visualization::PCLVisualizer::Ptr& viewer) {
 
   tools = Tools();
   std::random_device rd;
-  std::mt19937 gen(rd());
+  std::mt19937 gen(std::chrono::system_clock::now().time_since_epoch().count());
   std::uniform_real_distribution<> disPos(-35.0, 35.0);
   std::uniform_real_distribution<> disDim(1.5, 2.0);
 
-  // Generate obstacles
   for (int i = 0; i <= 5; ++i) {
     Vect3 position(disPos(gen), disPos(gen), 0.0);
     Vect3 dimensions(disDim(gen), disDim(gen), disDim(gen));
@@ -21,7 +20,6 @@ Scene::Scene(pcl::visualization::PCLVisualizer::Ptr& viewer) {
     obstacles.push_back(obstacle);
   }
 
-  // Generate parking spots
   parkingSpots.emplace_back(pcl::PointXYZ(-30, -30, 0), 4.0, 2.0, 0.1, 1);
   parkingSpots.back().setName("parkingSpot1");
   parkingSpots.emplace_back(pcl::PointXYZ(-30, 30, 0), 4.0, 2.0, 0.1, 2);
@@ -32,91 +30,52 @@ Scene::Scene(pcl::visualization::PCLVisualizer::Ptr& viewer) {
   parkingSpots.back().setName("parkingSpot4");
 
   Car car1 = Car(
-      Vect3(-10, 4, 0),
-      Vect3(4, 2, 2),
-      Color(1, 0, 0),
-      10, // increased speed
-      0, 2,
-      2, 2,
-      "car1"
+      Vect3(-10, 4, 0),  // Position
+      Vect3(4, 2, 2),    // Dimensions
+      Color(1, 0, 0),    // Color
+      10,                // Angle
+      2,                 // Front Center Distance
+      "car1"             // Name
   );
 
-  std::vector<Control> car1_instructions;
-  Control a = Control(0.3*1e6, 0.8, 0.3);
-  car1_instructions.push_back(a);
-  a = Control(1.1*1e6, 0.3, -0.4);
-  car1_instructions.push_back(a);
-  a = Control(2.2*1e6, 0.0, 0.3);
-  car1_instructions.push_back(a);
-  a = Control(3.3*1e6, -2.5, 0.0);
-  car1_instructions.push_back(a);
-  car1.control(car1_instructions);
+  Car car2 = Car(
+      Vect3(25, -40, 0), // Position
+      Vect3(4, 2, 2),    // Dimensions
+      Color(0, 0, 1),    // Color
+      -6,                // Angle
+      2,                 // Front Center Distance
+      "car2"             // Name
+  );
+
+  Car car3 = Car(
+      Vect3(-12, 30, 0), // Position
+      Vect3(4, 2, 2),    // Dimensions
+      Color(1, 1, 1),    // Color
+      2,                 // Angle
+      2,                 // Front Center Distance
+      "car3"             // Name
+  );
+
 
   if (trackCars[0]) {
     Tracker tracker1;
     car1.setTracker(tracker1);
   }
 
-  Car car2 = Car(
-      Vect3(25, -40, 0),
-      Vect3(4, 2, 2),
-      Color(0, 0, 1),
-      -6, // increased speed
-      0, 2,
-      2, 2,
-      "car2"
-  );
-
-  std::vector<Control> car2_instructions;
-  car2_instructions.push_back(a);
-  a = Control(4.0*1e6, 3.0, -0.3);
-  car2_instructions.push_back(a);
-  a = Control(6.0*1e6, 0.0, 0.5);
-  car2_instructions.push_back(a);
-  a = Control(8.0*1e6, -2.0, -0.3);
-  car2_instructions.push_back(a);
-  a = Control(10.0*1e6, 0.0, 0.0);
-  car2_instructions.push_back(a);
-  car2.control(car2_instructions);
-
   if (trackCars[1]) {
     Tracker tracker2;
     car2.setTracker(tracker2);
   }
 
-
-  Car car3 = Car(
-      Vect3(-12, 30, 0),
-      Vect3(4, 2, 2),
-      Color(1, 1, 1),
-      2, // Increased initial speed
-      0, 2,
-      2, 2,
-      "car3"
-  );
-
-  std::vector<Control> car3_instructions;
-  car3_instructions.push_back(a);
-  a = Control(1.0*1e6, 3.5, 0.5);
-  car3_instructions.push_back(a);
-  a = Control(2.0*1e6, 0.0, -1.5);
-  car3_instructions.push_back(a);
-  a = Control(3.0*1e6, 3.0, 0.0);
-  car3_instructions.push_back(a);
-  a = Control(4.0*1e6, -1.0, -0.5);
-  car3_instructions.push_back(a);
-  a = Control(5.0*1e6, 0.0, 1.0);
-  car3_instructions.push_back(a);
-  a = Control(6.0*1e6, 2.0, 0.0);
-  car3_instructions.push_back(a);
-  a = Control(7.5*1e6, 0.0, 0.0);
-  car3_instructions.push_back(a);
-  car3.control(car3_instructions);
-
   if (trackCars[2]) {
     Tracker tracker3;
     car3.setTracker(tracker3);
   }
+
+  int numInstructions = 20;
+  car1.control(randomControlInstructions(gen, numInstructions));
+  car2.control(randomControlInstructions(gen, numInstructions));
+  car3.control(randomControlInstructions(gen, numInstructions));
 
   traffic.push_back(car1);
   traffic.push_back(car2);
@@ -126,7 +85,29 @@ Scene::Scene(pcl::visualization::PCLVisualizer::Ptr& viewer) {
   car3.render(viewer);
 }
 
-void Scene::stepScene(Car& egoCar, double egoVelocity, long long timestamp, pcl::visualization::PCLVisualizer::Ptr& viewer) {
+Control Scene::randomControl(std::mt19937& gen) {
+  std::uniform_real_distribution<> disTime(1, 9);
+  std::uniform_real_distribution<> disAcceleration(-5, 2);
+  std::uniform_real_distribution<> disSteering(-0.15, 0.15);
+
+  double time = disTime(gen);
+  double acceleration = disAcceleration(gen);
+  double steering = disSteering(gen);
+
+  return Control(time, acceleration, steering);
+}
+
+std::vector<Control> Scene::randomControlInstructions(std::mt19937& gen, int numInstructions) {
+  std::vector<Control> instructions;
+
+  for(int i=0; i<numInstructions; ++i) {
+    instructions.push_back(Scene::randomControl(gen));
+  }
+
+  return instructions;
+}
+
+void Scene::stepScene(Car& egoCar, double dt, long long timestamp, pcl::visualization::PCLVisualizer::Ptr& viewer) {
 
   road.render(viewer);
   for (const ParkingSpot& parkingSpot : parkingSpots) {
@@ -142,11 +123,11 @@ void Scene::stepScene(Car& egoCar, double egoVelocity, long long timestamp, pcl:
     viewer->addText("Parked on all spots!", 200, 200, 20, 1, 1, 1, "completeParkingText");
   }
 
-  egoCar.move(egoVelocity, timestamp);
+  egoCar.move(dt, timestamp);
   egoCar.render(viewer);
 
   Car predictedEgoCar = egoCar;
-  predictedEgoCar.move(egoVelocity, timestamp);
+  predictedEgoCar.move(dt, timestamp);
 
   for (const Obstacle& obstacle: obstacles) {
     obstacle.render(viewer);
@@ -163,7 +144,7 @@ void Scene::stepScene(Car& egoCar, double egoVelocity, long long timestamp, pcl:
     Car& car = traffic[i];
     viewer->removeShape(car.getName());
     viewer->removeShape(car.getName() + "front");
-    car.move(egoVelocity, timestamp);
+    car.move(dt, timestamp);
     car.render(viewer);
 
     if (!visualize_pcd) {}

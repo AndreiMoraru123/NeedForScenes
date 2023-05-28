@@ -20,16 +20,12 @@ Car::Car()
       cosNegAngle(0) {}
 
 Car::Car(
-    Vect3 setPosition, Vect3 setDimensions, Color setColor, float setVelocity,
-    float setAngle, float setAcceleration, float setSteering,
-    float setFrontCenterDistance, std::string setName
+    Vect3 setPosition, Vect3 setDimensions, Color setColor,
+    float setAngle, float setFrontCenterDistance, std::string setName
     ): position(setPosition),
       dimensions(setDimensions),
       color(setColor),
-      velocity(setVelocity),
       angle(setAngle),
-      acceleration(setAcceleration),
-      steering(setSteering),
       front_center_distance(setFrontCenterDistance),
       name(std::move(setName)) {
   orientation = Eigen::Quaternionf(Eigen::AngleAxisf(angle, Eigen::Vector3f::UnitZ()));
@@ -37,6 +33,7 @@ Car::Car(
   cosNegAngle = cos(- angle);
   acceleration = 0;
   steering = 0;
+  velocity = 0;
   control_index = 0;
   rolling_instace = 0.2;
 }

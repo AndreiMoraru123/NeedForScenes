@@ -69,8 +69,7 @@ public:
   double cosNegAngle;
 public:
   Car();
-  Car(Vect3 setPosition, Vect3 setDimensions, Color setColor, float setVelocity,
-      float setAngle, float setAcceleration, float setSteering,
+  Car(Vect3 setPosition, Vect3 setDimensions, Color setColor, float setAngle,
       float setFrontCenterDistance, std::string setName);
   void renderBottom(pcl::visualization::PCLVisualizer::Ptr& viewer) const;
   void renderTop(pcl::visualization::PCLVisualizer::Ptr& viewer) const;

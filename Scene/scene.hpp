@@ -11,6 +11,7 @@
 #include "../Objects/parkingspot.hpp"
 #include "../Toolkit/tools.hpp"
 #include <random>
+#include <chrono>
 
 class Scene {
 public:
@@ -31,8 +32,10 @@ public:
   double projectedTime = 0;
   int projectedSteps = 0;
   explicit Scene(pcl::visualization::PCLVisualizer::Ptr& viewer);
-  void stepScene(Car& egoCar, double egoVelocity, long long timestamp, pcl::visualization::PCLVisualizer::Ptr& viewer);
+  void stepScene(Car& egoCar, double dt, long long timestamp, pcl::visualization::PCLVisualizer::Ptr& viewer);
   bool checkTrafficCollision(Car& egoCar);
+  static std::vector<Control> randomControlInstructions(std::mt19937& gen, int numInstructions);
+  static Control randomControl(std::mt19937& gen);
 };
 
 #endif // NFS_SCENE_HPP
