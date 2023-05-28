@@ -15,6 +15,7 @@
 class Scene {
 public:
   std::vector<Car> traffic;
+  Road road;
   Tools tools;
   bool pass = true;
   bool win = false;
@@ -23,6 +24,7 @@ public:
   std::vector<double> rmseFailLog = {0.0,0.0,0.0,0.0};
   std::vector<Obstacle> obstacles;
   std::vector<ParkingSpot> parkingSpots;
+  std::set<std::string> parkedSpots;
   bool visualize_lidar = true;
   bool visualize_radar = true;
   bool visualize_pcd = false;

@@ -41,62 +41,78 @@ Car::Car(
   rolling_instace = 0.2;
 }
 
-void Car::render(pcl::visualization::PCLVisualizer::Ptr& viewer) const {
-  // Render bottom of the car
+void Car::renderBottom(pcl::visualization::PCLVisualizer::Ptr& viewer) const {
   viewer->addCube(Eigen::Vector3f(position.x, position.y, dimensions.z * 1 / 3),
-                  orientation,
-                  dimensions.x, dimensions.y, dimensions.z * 2 / 3,
+                  orientation, dimensions.x, dimensions.y, dimensions.z * 2 / 3,
                   name);
   viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR,
-                                      color.r, color.g, color.b,
-                                      name);
-  viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_REPRESENTATION,
-                                      pcl::visualization::PCL_VISUALIZER_REPRESENTATION_SURFACE,
-                                      name);
-  // Render top of the car
+                                      color.r, color.g, color.b, name);
+  viewer->setShapeRenderingProperties(
+      pcl::visualization::PCL_VISUALIZER_REPRESENTATION,
+      pcl::visualization::PCL_VISUALIZER_REPRESENTATION_SURFACE, name);
+}
+
+void Car::renderTop(pcl::visualization::PCLVisualizer::Ptr& viewer) const {
   viewer->addCube(Eigen::Vector3f(position.x, position.y, dimensions.z * 5 / 6),
-                  orientation,
-                  dimensions.x / 2, dimensions.y, dimensions.z * 1 / 3,
-                  name + "Top");
+                  orientation, dimensions.x / 2, dimensions.y,
+                  dimensions.z * 1 / 3, name + "Top");
   viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR,
-                                      color.r, color.g, color.b,
-                                      name + "Top");
-  viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_REPRESENTATION,
-                                      pcl::visualization::PCL_VISUALIZER_REPRESENTATION_SURFACE,
-                                      name + "Top");
-  // Render wheels
+                                      color.r, color.g, color.b, name + "Top");
+  viewer->setShapeRenderingProperties(
+      pcl::visualization::PCL_VISUALIZER_REPRESENTATION,
+      pcl::visualization::PCL_VISUALIZER_REPRESENTATION_SURFACE, name + "Top");
+}
+
+Eigen::Vector3f Car::generateWindshieldPosition(int i) const {
+  Eigen::Vector3f localPosition(i * dimensions.x / 4, 0, dimensions.z * 2 / 3);
+  Eigen::Quaternionf quaternion(orientation);
+  Eigen::AngleAxisf rotation(quaternion);
+  Eigen::Vector3f rotatedPosition = rotation * localPosition;
+  Eigen::Vector3f positionEigen(position.x, position.y, position.z);
+  return positionEigen + rotatedPosition;
+}
+
+pcl::ModelCoefficients Car::generateWheelCoefficients(int i, int j) const {
+  pcl::ModelCoefficients coeffs;
+  coeffs.values.push_back(position.x + i * dimensions.x / 5); // x position
+  coeffs.values.push_back(position.y + j * dimensions.y / 2); // y position
+  coeffs.values.push_back(position.z + dimensions.z / 7); // z position
+  coeffs.values.push_back(1); // Direction x
+  coeffs.values.push_back(0); // Direction y
+  coeffs.values.push_back(0); // Direction z
+  coeffs.values.push_back(dimensions.z * 1 / 5); // Radius
+  return coeffs;
+}
+
+void Car::renderWheels(pcl::visualization::PCLVisualizer::Ptr &viewer) const {
   for(int i=-1; i<=1; i+=2) {
     for(int j=-1; j<=1; j+=2) {
-      pcl::ModelCoefficients coeffs;
-      coeffs.values.push_back(position.x + i * dimensions.x / 5); // x position
-      coeffs.values.push_back(position.y + j * dimensions.y / 2); // y position
-      coeffs.values.push_back(position.z + dimensions.z / 7); // z position
-      coeffs.values.push_back(1); // Direction x
-      coeffs.values.push_back(0); // Direction y
-      coeffs.values.push_back(0); // Direction z
-      coeffs.values.push_back(dimensions.z * 1 / 5); // Radius
+      pcl::ModelCoefficients coeffs = generateWheelCoefficients(i, j);
       viewer->addCylinder(coeffs, name + "Wheel" + std::to_string(i) + std::to_string(j));
       viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR,
-                                          0, 0, 0,
-                                          name + "Wheel" + std::to_string(i) + std::to_string(j));
+                                          0, 0, 0, name + "Wheel" + std::to_string(i) + std::to_string(j));
     }
   }
-  // Render windshields
+}
+
+void Car::renderWindshields(pcl::visualization::PCLVisualizer::Ptr &viewer) const {
   for(int i=-1; i<=1; i+=2) {
-    Eigen::Vector3f localPosition(i * dimensions.x / 4, 0, dimensions.z * 2 / 3);
-    Eigen::Quaternionf quaternion(orientation);
-    Eigen::AngleAxisf rotation(quaternion);
-    Eigen::Vector3f rotatedPosition = rotation * localPosition;
-    Eigen::Vector3f positionEigen(position.x, position.y, position.z);
-    Eigen::Vector3f globalPosition = positionEigen + rotatedPosition;
-    viewer->addCube(globalPosition, quaternion, dimensions.x / 4, dimensions.y, dimensions.z / 6, name + "Windshield" + std::to_string(i));
+    Eigen::Vector3f globalPosition = generateWindshieldPosition(i);
+    viewer->addCube(globalPosition, orientation, dimensions.x / 4, dimensions.y, dimensions.z / 6, name + "Windshield" + std::to_string(i));
     viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR,
-                                        0.3, 0.7, 1.0,
-                                        name + "Windshield" + std::to_string(i));
+                                        0.3, 0.7, 1.0, name + "Windshield" + std::to_string(i));
     viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_REPRESENTATION,
                                         pcl::visualization::PCL_VISUALIZER_REPRESENTATION_SURFACE,
                                         name + "Windshield" + std::to_string(i));
   }
+}
+
+
+void Car::render(pcl::visualization::PCLVisualizer::Ptr& viewer) const {
+  renderBottom(viewer);
+  renderTop(viewer);
+  renderWheels(viewer);
+  renderWindshields(viewer);
 }
 
 

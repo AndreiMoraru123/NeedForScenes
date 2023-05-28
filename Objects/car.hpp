@@ -72,6 +72,10 @@ public:
   Car(Vect3 setPosition, Vect3 setDimensions, Color setColor, float setVelocity,
       float setAngle, float setAcceleration, float setSteering,
       float setFrontCenterDistance, std::string setName);
+  void renderBottom(pcl::visualization::PCLVisualizer::Ptr& viewer) const;
+  void renderTop(pcl::visualization::PCLVisualizer::Ptr& viewer) const;
+  void renderWheels(pcl::visualization::PCLVisualizer::Ptr& viewer) const;
+  void renderWindshields(pcl::visualization::PCLVisualizer::Ptr& viewer) const;
   void render(pcl::visualization::PCLVisualizer::Ptr& viewer) const;
   void accelerate(float acc, int dir = 1);
   void steer(float s);
@@ -87,6 +91,8 @@ public:
   [[nodiscard]] Tracker& getTracker();
   [[nodiscard]] Vect3 getDirection();
   [[nodiscard]] bool checkCollision(Vect3 point) const;
+  Eigen::Vector3f generateWindshieldPosition(int i) const;
+  pcl::ModelCoefficients generateWheelCoefficients(int i, int j) const;
 };
 
 #endif // NFS_CAR_HPP

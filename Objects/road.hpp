@@ -8,7 +8,29 @@
 #ifndef NFS_ROAD_HPP
 #define NFS_ROAD_HPP
 
-void renderRoad(double distancePos, pcl::visualization::PCLVisualizer::Ptr& viewer);
+class Road {
+public:
+  Road();
+  void computeCoefficients();
+  void computeDummies();
+  void renderPoles(pcl::visualization::PCLVisualizer::Ptr& viewer) const;
+  void renderLanes(pcl::visualization::PCLVisualizer::Ptr& viewer) const;
+  void renderDummies(pcl::visualization::PCLVisualizer::Ptr& viewer) const;
+  void render(pcl::visualization::PCLVisualizer::Ptr& viewer) const;
+private:
+  float arenaRadius;
+  float laneWidth;
+  float laneCount;
+  float poleRadius;
+  float poleHeight;
+  float poleSpacing;
+  std::vector<pcl::ModelCoefficients> laneCoefficients;
+  std::vector<pcl::ModelCoefficients> poleCoefficients;
+  std::vector<pcl::PointXYZ> parkingSpots;
+  std::vector<std::pair<pcl::PointXYZ, double>> obstacles;
+};
+
+void renderRoad(pcl::visualization::PCLVisualizer::Ptr& viewer);
 void renderPointCloud(pcl::visualization::PCLVisualizer::Ptr& viewer, const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud, const std::string& name, Color color = Color(1, 1, 1));
 
 

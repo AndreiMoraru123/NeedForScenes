@@ -121,7 +121,6 @@ Scene::Scene(pcl::visualization::PCLVisualizer::Ptr& viewer) {
   traffic.push_back(car1);
   traffic.push_back(car2);
   traffic.push_back(car3);
-  renderRoad(0, viewer);
   car1.render(viewer);
   car2.render(viewer);
   car3.render(viewer);
@@ -129,15 +128,18 @@ Scene::Scene(pcl::visualization::PCLVisualizer::Ptr& viewer) {
 
 void Scene::stepScene(Car& egoCar, double egoVelocity, long long timestamp, pcl::visualization::PCLVisualizer::Ptr& viewer) {
 
-  renderRoad(egoVelocity * timestamp / 1e6, viewer);
-
+  road.render(viewer);
   for (const ParkingSpot& parkingSpot : parkingSpots) {
-    viewer->removeShape(parkingSpot.getName());
     parkingSpot.render(viewer);
     if(parkingSpot.isCarParked(egoCar)) {
-      win = true;
+      parkedSpots.insert(parkingSpot.getName());
       viewer->addText("Parked!", 200, 200, 20, 1, 1, 1, "parkingText");
     }
+  }
+
+  if (parkedSpots.size() == parkingSpots.size()) {
+    win = true;
+    viewer->addText("Parked on all spots!", 200, 200, 20, 1, 1, 1, "completeParkingText");
   }
 
   egoCar.move(egoVelocity, timestamp);
@@ -147,7 +149,6 @@ void Scene::stepScene(Car& egoCar, double egoVelocity, long long timestamp, pcl:
   predictedEgoCar.move(egoVelocity, timestamp);
 
   for (const Obstacle& obstacle: obstacles) {
-    viewer->removeShape(obstacle.getName());
     obstacle.render(viewer);
     if (obstacle.checkCollision(predictedEgoCar)) {
       viewer->addText("Crashed!", 200, 200, 20, 1, 1, 1, "collisionText");
