@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CXX_FLAGS "-Wall")
 set(CMAKE_CXX_FLAGS, "${CXX_FLAGS}")
 
-find_package(PCL 1.12 EXACT REQUIRED)
+find_package(PCL 1.12 REQUIRED)
 
 include_directories(${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
