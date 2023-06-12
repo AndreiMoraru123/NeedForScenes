@@ -106,6 +106,10 @@ void Road::render(pcl::visualization::PCLVisualizer::Ptr& viewer) const {
   renderDummies(viewer);
 }
 
+std::vector<pcl::ModelCoefficients>Road::getLaneCoefficients() const {
+  return laneCoefficients;
+}
+
 void renderPointCloud(pcl::visualization::PCLVisualizer::Ptr& viewer, const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud, const std::string& name, Color color) {
   viewer->addPointCloud<pcl::PointXYZ>(cloud, name);
   viewer->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 4, name);

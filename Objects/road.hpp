@@ -17,10 +17,11 @@ public:
   void renderLanes(pcl::visualization::PCLVisualizer::Ptr& viewer) const;
   void renderDummies(pcl::visualization::PCLVisualizer::Ptr& viewer) const;
   void render(pcl::visualization::PCLVisualizer::Ptr& viewer) const;
+  std::vector<pcl::ModelCoefficients> getLaneCoefficients() const;
 private:
   float arenaRadius;
   float laneWidth;
-  float laneCount;
+  int laneCount;
   float poleRadius;
   float poleHeight;
   float poleSpacing;
@@ -30,7 +31,6 @@ private:
   std::vector<std::pair<pcl::PointXYZ, double>> obstacles;
 };
 
-void renderRoad(pcl::visualization::PCLVisualizer::Ptr& viewer);
 void renderPointCloud(pcl::visualization::PCLVisualizer::Ptr& viewer, const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud, const std::string& name, Color color = Color(1, 1, 1));
 
 

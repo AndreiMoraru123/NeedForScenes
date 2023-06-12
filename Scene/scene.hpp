@@ -34,8 +34,8 @@ public:
   explicit Scene(pcl::visualization::PCLVisualizer::Ptr& viewer);
   void stepScene(Car& egoCar, double dt, long long timestamp, pcl::visualization::PCLVisualizer::Ptr& viewer);
   bool checkTrafficCollision(Car& egoCar);
-  static std::vector<Control> randomControlInstructions(std::mt19937& gen, int numInstructions);
-  static Control randomControl(std::mt19937& gen);
+  std::vector<Control> randomControlInstructions(std::mt19937& gen, Car& car, int numInstructions);
+  Control randomControl(std::mt19937& gen, Car& car);
 };
 
 #endif // NFS_SCENE_HPP

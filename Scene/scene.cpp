@@ -7,7 +7,6 @@
 Scene::Scene(pcl::visualization::PCLVisualizer::Ptr& viewer) {
 
   tools = Tools();
-  std::random_device rd;
   std::mt19937 gen(std::chrono::system_clock::now().time_since_epoch().count());
   std::uniform_real_distribution<> disPos(-35.0, 35.0);
   std::uniform_real_distribution<> disDim(1.5, 2.0);
@@ -73,9 +72,9 @@ Scene::Scene(pcl::visualization::PCLVisualizer::Ptr& viewer) {
   }
 
   int numInstructions = 20;
-  car1.control(randomControlInstructions(gen, numInstructions));
-  car2.control(randomControlInstructions(gen, numInstructions));
-  car3.control(randomControlInstructions(gen, numInstructions));
+  car1.control(randomControlInstructions(gen, car1, numInstructions));
+  car2.control(randomControlInstructions(gen, car2, numInstructions));
+  car3.control(randomControlInstructions(gen, car3, numInstructions));
 
   traffic.push_back(car1);
   traffic.push_back(car2);
@@ -85,23 +84,46 @@ Scene::Scene(pcl::visualization::PCLVisualizer::Ptr& viewer) {
   car3.render(viewer);
 }
 
-Control Scene::randomControl(std::mt19937& gen) {
+Control Scene::randomControl(std::mt19937& gen, Car& car) {
   std::uniform_real_distribution<> disTime(1, 9);
   std::uniform_real_distribution<> disAcceleration(-5, 2);
   std::uniform_real_distribution<> disSteering(-0.15, 0.15);
 
-  double time = disTime(gen);
-  double acceleration = disAcceleration(gen);
-  double steering = disSteering(gen);
+  Vect3 currentPosition = car.getPosition();
+
+  double time;
+  double acceleration;
+  double steering;
+
+  bool withinBounds;
+  do {
+    time = disTime(gen);
+    acceleration = disAcceleration(gen);
+    steering = disSteering(gen);
+
+    Vect3 newPosition = currentPosition + Vect3(time * acceleration * cos(steering),
+                                                time * acceleration * sin(steering),
+                                                0);
+    withinBounds = true;
+    for (const auto& coeff : road.getLaneCoefficients()) {
+      double distance = sqrt(
+          pow(newPosition.x - coeff.values[0], 2) +
+          pow(newPosition.y - coeff.values[1], 2));
+      if (distance < coeff.values[2] / 2) {
+        withinBounds = false;
+        break;
+      }
+    }
+  } while (!withinBounds);
 
   return Control(time, acceleration, steering);
 }
 
-std::vector<Control> Scene::randomControlInstructions(std::mt19937& gen, int numInstructions) {
+std::vector<Control> Scene::randomControlInstructions(std::mt19937& gen, Car& car, int numInstructions) {
   std::vector<Control> instructions;
 
   for(int i=0; i<numInstructions; ++i) {
-    instructions.push_back(Scene::randomControl(gen));
+    instructions.push_back(randomControl(gen, car));
   }
 
   return instructions;
