@@ -5,7 +5,7 @@
 ![game](https://github.com/AndreiMoraru123/NeedForScenes/assets/81184255/a20df907-f54c-448d-b955-c4319bab677c)
 
 ## The Ego Car 🏎️
-The green player-controlled car's motion models is designed using a 2D kinematic model accelerated with four states:
+The green player-controlled car's motion model is designed using a 2D kinematic model accelerated with four states:
 - x-position, y-position, velocity, and steering angle.
 
 These states are governed by the following equations implemented in the code:
