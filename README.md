@@ -1,4 +1,4 @@
-# Need For Scenes - Point Cloud Pursuit
+# 🎮 Need For Scenes - Point Cloud Pursuit 🎮
 
 #### A Multi Object Tracking (MOT) via Sensor Fusion 3D interactive simulation using the awesome [Point Cloud Library](https://pointclouds.org/).
 
@@ -48,8 +48,8 @@ where:
       - The green arrow represents the estimated velocity vector of the adversary car, also derived from the Kalman filter.
     - Red Sphere:
       - The red sphere represents the actual position of the adversary car, derived from the predefined action vectors and encoded control laws, but subject to a certain level of noise from simulated LIDAR measurement.
-    - Pink/Magenta Arrow:
-      - The pink/magenta arrow illustrates the radar measurement from the ego car to the adversary car.
+    - Magenta Arrow:
+      - The magenta arrow illustrates the radar measurement from the ego car to the adversary car.
      
 ## Parking Spots:
   - Parking spots are designated areas that are static, meaning they do not move or change position throughout the game.
