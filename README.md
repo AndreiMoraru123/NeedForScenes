@@ -104,6 +104,45 @@ The Scene class is designed to provide several key functionalities:
    - These objects specify the speed and steering angle of the car for specific periods.
    - The Car class has a control function used to set these controls.
 
+## Unscented Kalman Filter (UKF)
+
+In this project, the Unscented Kalman Filter (UKF) serves as the primary tool for state estimation under the simulation's non-linear circumstances.
+
+### Estimated State
+
+The tracked state of the car in this code includes:
+
+1. **Position** (x and y): This is the current 2D position of the vehicle. Both lidar and radar measurements can provide information on position. The lidar provides a direct measurement in Cartesian coordinates, while the radar provides a measurement in polar coordinates that can be converted to Cartesian.
+
+2. **Velocity** (v): This is the magnitude of the 2D velocity. While the lidar does not directly measure velocity, radar can provide the radial velocity of the vehicle (the component of the velocity towards or away from the radar sensor). 
+
+3. **Yaw Angle** (ψ): This is the orientation of the vehicle in the 2D plane, relative to the positive x-axis.
+
+4. **Yaw Rate** (ψ_dot): This is the rate of change of the yaw angle, which describes how quickly the vehicle is changing its orientation.
+
+
+### Prediction Step
+
+1. **Sigma Point Generation**: The UKF starts by generating sigma points from the current state estimate and its covariance. The process includes adding and subtracting a scaled square root of the covariance matrix from the state estimate. This step produces a cloud of points that encapsulates the possible states the system could be in, considering the uncertainty.
+
+2. **Sigma Point Propagation**: Each generated sigma point is then propagated through the non-linear system dynamics. The specific dynamics depend on the system being modeled. For a mobile robot, it might be a kinematic bicycle model, for instance. 
+
+3. **Mean and Covariance Estimation**: Once propagated, the sigma points are recombined to form a new predicted state estimate and covariance. The combination process involves taking a weighted sum of the sigma points, where the weights depend on the chosen sigma point generation method.
+
+### Update Step
+
+1. **Sigma Point Generation for the Measurement**: Just like in the prediction step, sigma points are generated but this time, these sigma points are transformed into the measurement space using the measurement function.
+
+2. **Cross-Correlation Matrix Calculation**: The cross-correlation matrix is calculated using the difference between the mean of the predicted sigma points and each predicted sigma point in the state space, and the difference between the mean of the transformed sigma points and each transformed sigma point in the measurement space.
+
+3. **Kalman Gain Calculation**: The Kalman gain is calculated using the cross-correlation matrix and the covariance matrix of the predicted sigma points in the measurement space.
+
+4. **State Update**: The final step is to calculate the residual (the difference between the actual measurement and the transformed mean of the sigma points), multiply it with the Kalman gain and add this to the predicted state to obtain the updated state.
+
+5. **Covariance Update**: Similarly, the covariance is updated by subtracting the Kalman gain times the covariance of the predicted sigma points in the measurement space times the transpose of the Kalman gain from the predicted covariance.
+
+This process repeats in a loop for each incoming measurement, continuously refining the state estimate in response to new data. Thus, the UKF allows our system to maintain an accurate state representation despite working under non-linear conditions.
+
 
 ## ___Painless___ installation of the Point Cloud Library on Windows
 ### (if you want to try out this code):
