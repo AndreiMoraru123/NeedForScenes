@@ -1,6 +1,6 @@
 # Need For Scenes - Point Cloud Pursuit
 
-A Multi Object Tracking (MOT) via Sensor Fusion 3D interactive simulation using the awesome Point Cloud Library.
+#### A Multi Object Tracking (MOT) via Sensor Fusion 3D interactive simulation using the awesome Point Cloud Library.
 
 ![game](https://github.com/AndreiMoraru123/NeedForScenes/assets/81184255/a20df907-f54c-448d-b955-c4319bab677c)
 
