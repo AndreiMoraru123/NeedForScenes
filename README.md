@@ -4,7 +4,7 @@
 
 ![game](https://github.com/AndreiMoraru123/NeedForScenes/assets/81184255/a20df907-f54c-448d-b955-c4319bab677c)
 
-## The Ego Car
+## Ego Car
 The green player-controlled car's motion model is designed using a 2D kinematic model accelerated with four states:
 - x-position, y-position, velocity, and steering angle.
 
@@ -51,17 +51,17 @@ where:
     - Magenta Arrow:
       - The magenta arrow illustrates the radar measurement from the ego car to the adversary car.
      
-## Parking Spots:
+## Parking Spots
   - Parking spots are designated areas that are static, meaning they do not move or change position throughout the game.
   - They are strategically placed in the 3D environment and serve as the ultimate objective for the player.
   - The main goal of the player is to safely and efficiently maneuver the ego car into these parking spots.
 
-## Obstacles:
+## Obstacles
   - Obstacles are also static elements in the game that are randomly positioned in the 3D environment.
   - Their main function is to add complexity to the navigation task.
   - The player must skillfully maneuver the ego car around these obstacles to prevent collisions, which can impede the car's progress or result in game failure.
 
-## Fictional Parking Spots and Obstacles:
+## Fictional Parking Spots and Obstacles
   - These objects are unique elements that visually resemble real parking spots and obstacles but have no gameplay implications.
   - They do not interact with or affect the movement of the ego car.
   - Instead, their primary role is to enhance the visual complexity of the scene, adding another level of depth to the game's 3D environment.
