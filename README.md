@@ -46,7 +46,7 @@ where:
     - Despite their autonomous nature, the adversary agent cars do not possess advanced decision-making capabilities or the ability to react to the player's actions.
   - Visualization Elements:
     - Green Sphere and Green Arrow:
-      - The green sphere represents the estimated position of the adversary car, calculated by a Kalman filter as a tracking algorithm.
+      - The green sphere represents the estimated position of the adversary car, calculated by an Unscented Kalman filter as a tracking algorithm.
       - The green arrow represents the estimated velocity vector of the adversary car, also derived from the Kalman filter.
     - Red Sphere:
       - The red sphere represents the actual position of the adversary car, derived from the predefined action vectors and encoded control laws, but subject to a certain level of noise from simulated LIDAR measurement.
