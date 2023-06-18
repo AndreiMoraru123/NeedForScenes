@@ -12,9 +12,7 @@ Car::Car()
       velocity(0),
       angle(0),
       acceleration(0),
-      steering(0),
-      rolling_instace(0),
-      front_center_distance(0),
+      steering(0), rollingInstance(0), frontCenterDistance(0),
       control_index(0),
       sinNegAngle(0),
       cosNegAngle(0) {}
@@ -25,8 +23,7 @@ Car::Car(
     ): position(setPosition),
       dimensions(setDimensions),
       color(setColor),
-      angle(setAngle),
-      front_center_distance(setFrontCenterDistance),
+      angle(setAngle), frontCenterDistance(setFrontCenterDistance),
       name(std::move(setName)) {
   orientation = Eigen::Quaternionf(Eigen::AngleAxisf(angle, Eigen::Vector3f::UnitZ()));
   sinNegAngle = sin(- angle);
@@ -35,7 +32,7 @@ Car::Car(
   steering = 0;
   velocity = 0;
   control_index = 0;
-  rolling_instace = 0.5;
+  rollingInstance = 0.5;
 }
 
 void Car::renderBottom(pcl::visualization::PCLVisualizer::Ptr& viewer) const {
@@ -129,7 +126,7 @@ void Car::control(const std::vector<Control>& c) {
 
 void Car::move(float dt, int time_us) {
   if (!controls.empty() && control_index < (int) controls.size() - 1) {
-    if (time_us >= controls[control_index + 1].time_us) {
+    if (time_us >= controls[control_index + 1].timeUs) {
       accelerate(controls[control_index + 1].acceleration);
       steer(controls[control_index + 1].steering);
       control_index++;
@@ -138,19 +135,19 @@ void Car::move(float dt, int time_us) {
 
   position.x += velocity * cos(angle) * dt;
   position.y += velocity * sin(angle) * dt;
-  angle += velocity * steering * dt / front_center_distance;
+  angle += velocity * steering * dt / frontCenterDistance;
   orientation = Eigen::Quaternionf(Eigen::AngleAxisf(angle, Eigen::Vector3f::UnitZ()));
   velocity += acceleration * dt;
 
   // Apply rolling instance if there is no acceleration input
   if (acceleration == 0) {
     if (velocity > 0) {
-      velocity -= rolling_instace;
+      velocity -= rollingInstance;
       if (velocity < 0) {
         velocity = 0;
       }
     } else if (velocity < 0) {
-      velocity += rolling_instace;
+      velocity += rollingInstance;
       if (velocity > 0) {
         velocity = 0;
       }

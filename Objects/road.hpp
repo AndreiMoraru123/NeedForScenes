@@ -28,7 +28,7 @@ private:
   std::vector<pcl::ModelCoefficients> laneCoefficients;
   std::vector<pcl::ModelCoefficients> poleCoefficients;
   std::vector<pcl::PointXYZ> parkingSpots;
-  std::vector<std::pair<pcl::PointXYZ, double>> obstacles;
+  std::vector<std::pair<double, pcl::PointXYZ>> obstacles;
 };
 
 void renderPointCloud(pcl::visualization::PCLVisualizer::Ptr& viewer, const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud, const std::string& name, Color color = Color(1, 1, 1));

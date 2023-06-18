@@ -19,14 +19,16 @@ Scene::Scene(pcl::visualization::PCLVisualizer::Ptr& viewer) {
     obstacles.push_back(obstacle);
   }
 
-  parkingSpots.emplace_back(pcl::PointXYZ(-30, -30, 0), 4.0, 2.0, 0.1, 1);
-  parkingSpots.back().setName("parkingSpot1");
-  parkingSpots.emplace_back(pcl::PointXYZ(-30, 30, 0), 4.0, 2.0, 0.1, 2);
-  parkingSpots.back().setName("parkingSpot2");
-  parkingSpots.emplace_back(pcl::PointXYZ(30, -30, 0), 4.0, 2.0, 0.1, 3);
-  parkingSpots.back().setName("parkingSpot3");
-  parkingSpots.emplace_back(pcl::PointXYZ(30, 30, 0), 4.0, 2.0, 0.1, 4);
-  parkingSpots.back().setName("parkingSpot4");
+  double parkingSpotWidth = 2.0;
+  double parkingSpotLength = 4.0;
+  double parkingSpotHeight = 0.1;
+
+  for (int i = 0; i <= 3; ++i) {
+    pcl::PointXYZ position(disPos(gen), disPos(gen), 0.0);
+    ParkingSpot parkingSpot(position, parkingSpotLength, parkingSpotWidth, parkingSpotHeight, i);
+    parkingSpot.setName("parkingSpot" + std::to_string(i));
+    parkingSpots.push_back(parkingSpot);
+  }
 
   Car car1 = Car(
       Vect3(-10, 4, 0),  // Position

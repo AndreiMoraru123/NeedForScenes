@@ -52,13 +52,6 @@ void Road::renderPoles(pcl::visualization::PCLVisualizer::Ptr& viewer) const {
 
 void Road::computeDummies() {
 
-  parkingSpots = {
-      pcl::PointXYZ(-15, -30, 0),
-      pcl::PointXYZ(-15, 30, 0),
-      pcl::PointXYZ(15, -30, 0),
-      pcl::PointXYZ(15, 30, 0)
-  };
-
   std::vector<pcl::PointXYZ> dummyObstacles = {
       pcl::PointXYZ(-15, -15, 0),
       pcl::PointXYZ(-15, 15, 0),
@@ -69,10 +62,22 @@ void Road::computeDummies() {
   std::random_device rd;
   std::mt19937 gen(rd());
   std::uniform_real_distribution<> disDim(1.5, 2.0);
+  std::uniform_real_distribution<> disLoc(-30.0, 30.0);
+
+  std::vector<pcl::PointXYZ> dummyParkingSpots = {
+      pcl::PointXYZ(disLoc(gen), -disLoc(gen), 0),
+      pcl::PointXYZ(-disLoc(gen), disLoc(gen), 0),
+      pcl::PointXYZ(disLoc(gen), -disLoc(gen), 0),
+      pcl::PointXYZ(disLoc(gen), disLoc(gen), 0)
+  };
 
   for (const auto& location : dummyObstacles) {
     double dimension = disDim(gen);
-    obstacles.emplace_back(location, dimension);
+    obstacles.emplace_back(dimension, location);
+  }
+
+  for (auto& location : dummyParkingSpots) {
+    parkingSpots.push_back(location);
   }
 }
 
@@ -90,8 +95,8 @@ void Road::renderDummies(pcl::visualization::PCLVisualizer::Ptr& viewer) const {
   }
 
   for (size_t i = 0; i < obstacles.size(); ++i) {
-    pcl::PointXYZ location = obstacles[i].first;
-    double dimension = obstacles[i].second;
+    double dimension = obstacles[i].first;
+    pcl::PointXYZ location = obstacles[i].second;
     viewer->addCube(location.x, location.x + dimension,
                     location.y, location.y + dimension,
                     location.z, location.z + dimension,

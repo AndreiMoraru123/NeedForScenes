@@ -42,11 +42,11 @@ public:
 
 class Control {
 public:
-  long long time_us;
+  long long timeUs;
   float acceleration;
   float steering;
   Control(long long t, float acc, float s)
-      : time_us(t), acceleration(acc), steering(s)
+      : timeUs(t), acceleration(acc), steering(s)
   {}
 };
 
@@ -61,8 +61,8 @@ private:
   float angle;
   float acceleration;
   float steering;
-  float front_center_distance;
-  float rolling_instace;
+  float frontCenterDistance;
+  float rollingInstance;
   std::vector<Control> controls;
   int control_index;
   double sinNegAngle;
