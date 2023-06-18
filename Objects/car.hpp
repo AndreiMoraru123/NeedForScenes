@@ -51,7 +51,7 @@ public:
 };
 
 class Car {
-public:
+private:
   Vect3 position, dimensions;
   Eigen::Quaternionf orientation;
   std::string name;

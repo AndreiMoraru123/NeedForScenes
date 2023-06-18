@@ -14,7 +14,7 @@ Scene::Scene(pcl::visualization::PCLVisualizer::Ptr& viewer) {
   for (int i = 0; i <= 5; ++i) {
     Vect3 position(disPos(gen), disPos(gen), 0.0);
     Vect3 dimensions(disDim(gen), disDim(gen), disDim(gen));
-    Obstacle obstacle(position, dimensions, i);
+    Obstacle obstacle(position, dimensions);
     obstacle.setName("obstacle" + std::to_string(i));
     obstacles.push_back(obstacle);
   }

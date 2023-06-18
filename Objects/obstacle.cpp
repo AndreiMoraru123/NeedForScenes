@@ -4,9 +4,8 @@
 
 #include "obstacle.hpp"
 
-Obstacle::Obstacle(const Vect3& position, const Vect3& dimensions, int id)
-    : position_(position), dimensions_(dimensions), id_(id) {
-}
+Obstacle::Obstacle(const Vect3& position, const Vect3& dimensions)
+    : position_(position), dimensions_(dimensions) {}
 [[maybe_unused]] Vect3 Obstacle::getPosition() const { return position_; }
 [[maybe_unused]] Vect3 Obstacle::getDimensions() const { return dimensions_; }
 [[maybe_unused]] std::string Obstacle::getName() const { return name_; }
