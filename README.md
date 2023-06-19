@@ -1,4 +1,4 @@
-# 🎮 Need For Scenes - Point Cloud Pursuit 🎮
+# Need For Scenes - Point Cloud Pursuit 🎮
 
 #### A Multi Object Tracking (MOT) via Sensor Fusion 3D interactive simulation using the awesome [Point Cloud Library](https://pointclouds.org/).
 
