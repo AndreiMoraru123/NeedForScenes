@@ -11,7 +11,6 @@ int main() {
   viewer->setBackgroundColor(0, 0, 0);
   viewer->addCoordinateSystem(1.0);
   viewer->initCameraParameters();
-
   int* screenSize = viewer->getRenderWindow()->GetScreenSize();
   viewer->setSize(screenSize[0], screenSize[1]);
 

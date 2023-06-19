@@ -67,6 +67,8 @@ private:
   int control_index;
   double sinNegAngle;
   double cosNegAngle;
+  float air_resistance;
+  float tire_friction;
 public:
   Car();
   Car(Vect3 setPosition, Vect3 setDimensions, Color setColor, float setAngle,
@@ -93,5 +95,9 @@ public:
   Eigen::Vector3f generateWindshieldPosition(int i) const;
   pcl::ModelCoefficients generateWheelCoefficients(int i, int j) const;
 };
+
+inline int sign(float x) {
+  return (x > 0) - (x < 0);
+}
 
 #endif // NFS_CAR_HPP

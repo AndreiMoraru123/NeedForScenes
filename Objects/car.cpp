@@ -15,7 +15,9 @@ Car::Car()
       steering(0), rollingInstance(0), frontCenterDistance(0),
       control_index(0),
       sinNegAngle(0),
-      cosNegAngle(0) {}
+      cosNegAngle(0),
+      air_resistance(0.01),
+      tire_friction(0.1) {}
 
 Car::Car(
     Vect3 setPosition, Vect3 setDimensions, Color setColor,
@@ -33,6 +35,8 @@ Car::Car(
   velocity = 0;
   control_index = 0;
   rollingInstance = 0.5;
+  air_resistance = 0.01;
+  tire_friction = 0.1;
 }
 
 void Car::renderBottom(pcl::visualization::PCLVisualizer::Ptr& viewer) const {
@@ -101,7 +105,6 @@ void Car::renderWindshields(pcl::visualization::PCLVisualizer::Ptr &viewer) cons
   }
 }
 
-
 void Car::render(pcl::visualization::PCLVisualizer::Ptr& viewer) const {
   renderBottom(viewer);
   renderTop(viewer);
@@ -109,13 +112,12 @@ void Car::render(pcl::visualization::PCLVisualizer::Ptr& viewer) const {
   renderWindshields(viewer);
 }
 
-
 void Car::accelerate(float acc, int dir) {
-  acceleration = acc * dir;
+  acceleration = acc * dir - air_resistance * velocity * abs(velocity) - tire_friction * sign(velocity);
 }
 
 void Car::steer(float s) {
-  steering = s;
+  steering = s / (1 + abs(velocity));
 }
 
 void Car::control(const std::vector<Control>& c) {
@@ -139,7 +141,6 @@ void Car::move(float dt, int time_us) {
   orientation = Eigen::Quaternionf(Eigen::AngleAxisf(angle, Eigen::Vector3f::UnitZ()));
   velocity += acceleration * dt;
 
-  // Apply rolling instance if there is no acceleration input
   if (acceleration == 0) {
     if (velocity > 0) {
       velocity -= rollingInstance;
