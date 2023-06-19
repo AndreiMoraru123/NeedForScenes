@@ -16,8 +16,8 @@ Car::Car()
       control_index(0),
       sinNegAngle(0),
       cosNegAngle(0),
-      air_resistance(0.01),
-      tire_friction(0.1) {}
+      air_resistance(0.0),
+      tire_friction(0.0) {}
 
 Car::Car(
     Vect3 setPosition, Vect3 setDimensions, Color setColor,
@@ -35,8 +35,8 @@ Car::Car(
   velocity = 0;
   control_index = 0;
   rollingInstance = 0.5;
-  air_resistance = 0.01;
-  tire_friction = 0.1;
+  air_resistance = 0.0;
+  tire_friction = 0.0;
 }
 
 void Car::renderBottom(pcl::visualization::PCLVisualizer::Ptr& viewer) const {
@@ -113,11 +113,11 @@ void Car::render(pcl::visualization::PCLVisualizer::Ptr& viewer) const {
 }
 
 void Car::accelerate(float acc, int dir) {
-  acceleration = acc * dir - air_resistance * velocity * abs(velocity) - tire_friction * sign(velocity);
+  acceleration = acc * dir;
 }
 
 void Car::steer(float s) {
-  steering = s / (1 + abs(velocity));
+  steering = s;
 }
 
 void Car::control(const std::vector<Control>& c) {

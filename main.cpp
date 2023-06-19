@@ -12,7 +12,7 @@ int main() {
   viewer->addCoordinateSystem(1.0);
   viewer->initCameraParameters();
   int* screenSize = viewer->getRenderWindow()->GetScreenSize();
-  viewer->setSize(screenSize[0], screenSize[1]);
+  viewer->setSize(1280, 780);
 
   viewer->setCameraPosition(50, 50, 50, // Camera position
                             0, 0, 0, // Focal point (origin)

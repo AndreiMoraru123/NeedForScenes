@@ -88,7 +88,7 @@ Scene::Scene(pcl::visualization::PCLVisualizer::Ptr& viewer) {
 
 Control Scene::randomControl(std::mt19937& gen, Car& car) {
   std::uniform_real_distribution<> disTime(1, 9);
-  std::uniform_real_distribution<> disAcceleration(-5, 2);
+  std::uniform_real_distribution<> disAcceleration(-2, 1);
   std::uniform_real_distribution<> disSteering(-0.15, 0.15);
 
   Vect3 currentPosition = car.getPosition();

@@ -60,7 +60,7 @@ radarMarker Tools::radarSense(Car& car, Car ego, pcl::visualization::PCLVisualiz
               ego.getPosition().x + marker.rho * cos(marker.phi) + marker.rhoDot * cos(marker.phi),
               ego.getPosition().y + marker.rho * sin(marker.phi) + marker.rhoDot * sin(marker.phi),
               3.0
-              ), 1, 0, 1, car.getName() + "_rhoDot");
+              ), 1, 0, 1, false, car.getName() + "_rhoDot");
   }
 
   MeasurementPackage measPackage;
@@ -84,7 +84,7 @@ void Tools::trackerResults(Car car, pcl::visualization::PCLVisualizer::Ptr &view
       pcl::PointXYZ(tracker.x_[0], tracker.x_[1],3.5),
       pcl::PointXYZ(tracker.x_[0] + tracker.x_[2] * cos(tracker.x_[3]),
                     tracker.x_[1] + tracker.x_[2] * sin(tracker.x_[3]),3.5),
-      0, 1, 0, car.getName()+"_tracker_vel");
+      0, 1, 0, false, car.getName()+"_tracker_vel");
 
   if (time > 0) {
     double dt = time / steps;
@@ -92,7 +92,7 @@ void Tools::trackerResults(Car car, pcl::visualization::PCLVisualizer::Ptr &view
     while (ct <= time) {
       tracker.Prediction(dt);
       viewer->addSphere(pcl::PointXYZ(tracker.x_[0], tracker.x_[1], 3.5),
-                        0.5, 0, 1, 0,car.getName() + "_ukf" + std::to_string(ct));
+                        0.5, 0, 1, 0, car.getName() + "_ukf" + std::to_string(ct));
       viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_OPACITY,
                                           1.0 - 0.8 * (ct / time),
                                           car.getName() + "_ukf" + std::to_string(ct));
@@ -100,7 +100,7 @@ void Tools::trackerResults(Car car, pcl::visualization::PCLVisualizer::Ptr &view
           pcl::PointXYZ(tracker.x_[0], tracker.x_[1],3.5),
           pcl::PointXYZ(tracker.x_[0] + tracker.x_[2] * cos(tracker.x_[3]),
                         tracker.x_[1] + tracker.x_[2] * sin(tracker.x_[3]), 3.5),
-          0, 1, 0, car.getName() + "_ukf_vel"+std::to_string(ct));
+          0, 1, 0, false, car.getName() + "_ukf_vel"+std::to_string(ct));
       viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_OPACITY,
                                           1.0-0.8*(ct/time),
                                           car.getName() + "_ukf_vel"+std::to_string(ct));
