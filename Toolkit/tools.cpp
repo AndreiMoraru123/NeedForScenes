@@ -81,9 +81,9 @@ void Tools::trackerResults(Car car, pcl::visualization::PCLVisualizer::Ptr &view
       0.5, 0, 1, 0,car.getName()+"_tracker");
 
   viewer->addArrow(
-      pcl::PointXYZ(tracker.x_[0], tracker.x_[1],3.5),
+      pcl::PointXYZ(tracker.x_[0], tracker.x_[1], 3.5),
       pcl::PointXYZ(tracker.x_[0] + tracker.x_[2] * cos(tracker.x_[3]),
-                    tracker.x_[1] + tracker.x_[2] * sin(tracker.x_[3]),3.5),
+                    tracker.x_[1] + tracker.x_[2] * sin(tracker.x_[3]), 3.5),
       0, 1, 0, false, car.getName()+"_tracker_vel");
 
   if (time > 0) {

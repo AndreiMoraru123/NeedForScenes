@@ -87,8 +87,8 @@ Scene::Scene(pcl::visualization::PCLVisualizer::Ptr& viewer) {
 }
 
 Control Scene::randomControl(std::mt19937& gen, Car& car) {
-  std::uniform_real_distribution<> disTime(1, 9);
-  std::uniform_real_distribution<> disAcceleration(-2, 1);
+  std::uniform_real_distribution<> disTime(1, 8);
+  std::uniform_real_distribution<> disAcceleration(-5, 5);
   std::uniform_real_distribution<> disSteering(-0.15, 0.15);
 
   Vect3 currentPosition = car.getPosition();
@@ -118,16 +118,14 @@ Control Scene::randomControl(std::mt19937& gen, Car& car) {
     }
   } while (!withinBounds);
 
-  return Control(time, acceleration, steering);
+  return Control(time, acceleration * 0.25, steering);
 }
 
 std::vector<Control> Scene::randomControlInstructions(std::mt19937& gen, Car& car, int numInstructions) {
   std::vector<Control> instructions;
-
   for(int i=0; i<numInstructions; ++i) {
     instructions.push_back(randomControl(gen, car));
   }
-
   return instructions;
 }
 
@@ -171,8 +169,6 @@ void Scene::stepScene(Car& egoCar, double dt, long long timestamp, pcl::visualiz
     car.move(dt, timestamp);
     car.render(viewer);
 
-    if (!visualize_pcd) {}
-
     if (trackCars[i]) {
       Eigen::VectorXd gt(4);
       gt << car.getPosition().x, car.getPosition().y,
@@ -182,7 +178,9 @@ void Scene::stepScene(Car& egoCar, double dt, long long timestamp, pcl::visualiz
       tools.groundTruth.push_back(gt);
       tools.lidarSense(car, viewer, timestamp, visualize_lidar);
       tools.radarSense(car, egoCar, viewer, timestamp, visualize_radar);
-      tools.trackerResults(car, viewer, projectedTime, projectedSteps);
+      if (visualize_track) {
+        tools.trackerResults(car, viewer, projectedTime, projectedSteps);
+      }
       Eigen::VectorXd estimate(4);
       double v = traffic[i].getTracker().x_(2);
       double yaw = traffic[i].getTracker().x_(3);

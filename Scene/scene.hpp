@@ -28,9 +28,9 @@ public:
   std::set<std::string> parkedSpots;
   bool visualize_lidar = true;
   bool visualize_radar = true;
-  bool visualize_pcd = false;
-  double projectedTime = 0;
-  int projectedSteps = 0;
+  bool visualize_track = false;
+  double projectedTime = 2;
+  int projectedSteps = 6;
   explicit Scene(pcl::visualization::PCLVisualizer::Ptr& viewer);
   void stepScene(Car& egoCar, double dt, long long timestamp, pcl::visualization::PCLVisualizer::Ptr& viewer);
   bool checkTrafficCollision(Car& egoCar);
