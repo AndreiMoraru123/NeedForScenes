@@ -55,6 +55,8 @@ where:
     - Magenta Arrow:
       - The magenta arrow illustrates the radar measurement from the ego car to the adversary car.
      
+![image](https://github.com/AndreiMoraru123/NeedForScenes/assets/81184255/f740f723-18d7-418c-82d0-6df3abe089e9)
+     
 ## Parking Spots
   - Parking spots are designated areas that are static, meaning they do not move or change position throughout the game.
   - They are strategically placed in the 3D environment and serve as the ultimate objective for the player.
@@ -72,6 +74,8 @@ where:
   - Their presence contributes to providing a more immersive and challenging experience for the player.
 
 ## Game Scenario
+
+![image](https://github.com/AndreiMoraru123/NeedForScenes/assets/81184255/626c82a5-9601-49fe-9e91-1b4bbd0d5527)
 
 In the game environment, the encapsulation of the entire simulation domain is represented by the Scene class. This class is responsible for managing and coordinating all entities present in the game, including the adversary cars, obstacles, and parking spots. All these components are individually modeled objects using their respective classes: Car, Obstacle, and ParkingSpot.
 
@@ -109,6 +113,8 @@ The Scene class is designed to provide several key functionalities:
    - The Car class has a control function used to set these controls.
 
 ## Unscented Kalman Filter (UKF)
+
+![image](https://github.com/AndreiMoraru123/NeedForScenes/assets/81184255/58e7b18c-0af7-44ca-bb36-0e007c8236f5)
 
 In this project, the Unscented Kalman Filter (UKF) serves as the primary tool for state estimation under the simulation's non-linear circumstances.
 
