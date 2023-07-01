@@ -176,10 +176,3 @@ There is a lot more info to be found at the original [repo](https://github.com/m
 It looks like this for me (CLion):
 
 ![image](https://user-images.githubusercontent.com/81184255/197364009-78660d22-a0e9-4105-8327-9405d300993e.png)
-
-
-## Work in progress
-
-vroom vroom
-
-![stewie2](https://user-images.githubusercontent.com/81184255/236611184-109bb765-766f-44a5-9f36-193eed3291d9.png)
