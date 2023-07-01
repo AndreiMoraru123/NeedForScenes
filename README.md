@@ -4,11 +4,10 @@
 
 ![game](https://github.com/AndreiMoraru123/NeedForScenes/assets/81184255/a20df907-f54c-448d-b955-c4319bab677c)
 
-## Modelling
+## Ego Car
 
 ![image](https://github.com/AndreiMoraru123/NeedForScenes/assets/81184255/444a47ab-2759-4e15-9902-74bce80a7158)
 
-## Ego Car
 The green player-controlled car's motion model is designed using a 2D kinematic model accelerated with four states:
 - x-position, y-position, velocity, and steering angle.
 
@@ -54,8 +53,6 @@ where:
       - The red sphere represents the actual position of the adversary car, derived from the predefined action vectors and encoded control laws, but subject to a certain level of noise from simulated LIDAR measurement.
     - Magenta Arrow:
       - The magenta arrow illustrates the radar measurement from the ego car to the adversary car.
-     
-![image](https://github.com/AndreiMoraru123/NeedForScenes/assets/81184255/f740f723-18d7-418c-82d0-6df3abe089e9)
      
 ## Parking Spots
   - Parking spots are designated areas that are static, meaning they do not move or change position throughout the game.
@@ -114,7 +111,7 @@ The Scene class is designed to provide several key functionalities:
 
 ## Unscented Kalman Filter (UKF)
 
-![image](https://github.com/AndreiMoraru123/NeedForScenes/assets/81184255/58e7b18c-0af7-44ca-bb36-0e007c8236f5)
+![image](https://github.com/AndreiMoraru123/NeedForScenes/assets/81184255/224d7e17-f57a-420e-9b66-4e80791b2db9)
 
 In this project, the Unscented Kalman Filter (UKF) serves as the primary tool for state estimation under the simulation's non-linear circumstances.
 
