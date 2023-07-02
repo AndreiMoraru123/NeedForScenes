@@ -7,8 +7,6 @@
 ## Ego Car
 ![controller](https://github.com/AndreiMoraru123/NeedForScenes/assets/81184255/4e305fd9-de5c-4a79-b62e-76678492aed6)
 
-![image](https://github.com/AndreiMoraru123/NeedForScenes/assets/81184255/444a47ab-2759-4e15-9902-74bce80a7158)
-
 The green player-controlled car's motion model is designed using a 2D kinematic model accelerated with four states:
 - x-position, y-position, velocity, and steering angle.
 
@@ -72,8 +70,7 @@ where:
   - Their presence contributes to providing a more immersive and challenging experience for the player.
 
 ## Game Scenario
-
-![image](https://github.com/AndreiMoraru123/NeedForScenes/assets/81184255/626c82a5-9601-49fe-9e91-1b4bbd0d5527)
+![scene](https://github.com/AndreiMoraru123/NeedForScenes/assets/81184255/8ab967a2-94ad-4ffa-8e14-ca8b12f12a8a)
 
 In the game environment, the encapsulation of the entire simulation domain is represented by the Scene class. This class is responsible for managing and coordinating all entities present in the game, including the adversary cars, obstacles, and parking spots. All these components are individually modeled objects using their respective classes: Car, Obstacle, and ParkingSpot.
 
@@ -111,8 +108,7 @@ The Scene class is designed to provide several key functionalities:
    - The Car class has a control function used to set these controls.
 
 ## Unscented Kalman Filter (UKF)
-
-![image](https://github.com/AndreiMoraru123/NeedForScenes/assets/81184255/224d7e17-f57a-420e-9b66-4e80791b2db9)
+![ukf](https://github.com/AndreiMoraru123/NeedForScenes/assets/81184255/de0a6aed-9533-451e-8739-bcf66663ee9e)
 
 In this project, the Unscented Kalman Filter (UKF) serves as the primary tool for state estimation under the simulation's non-linear circumstances.
 
