@@ -5,6 +5,7 @@
 ![game](https://github.com/AndreiMoraru123/NeedForScenes/assets/81184255/a20df907-f54c-448d-b955-c4319bab677c)
 
 ## Ego Car
+![controller](https://github.com/AndreiMoraru123/NeedForScenes/assets/81184255/4e305fd9-de5c-4a79-b62e-76678492aed6)
 
 ![image](https://github.com/AndreiMoraru123/NeedForScenes/assets/81184255/444a47ab-2759-4e15-9902-74bce80a7158)
 
