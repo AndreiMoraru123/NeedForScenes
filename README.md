@@ -5,7 +5,10 @@
 ![game](https://github.com/AndreiMoraru123/NeedForScenes/assets/81184255/a20df907-f54c-448d-b955-c4319bab677c)
 
 ## Ego Car
-![controller](https://github.com/AndreiMoraru123/NeedForScenes/assets/81184255/4e305fd9-de5c-4a79-b62e-76678492aed6)
+
+<p align="center">
+  <img src="https://github.com/AndreiMoraru123/NeedForScenes/assets/81184255/4e305fd9-de5c-4a79-b62e-76678492aed6" alt="Ego" width="900" height="900">
+</p>
 
 The green player-controlled car's motion model is designed using a 2D kinematic model accelerated with four states:
 - x-position, y-position, velocity, and steering angle.
