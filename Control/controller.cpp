@@ -4,27 +4,24 @@
 
 #include "controller.hpp"
 
-
-EgoCarController::EgoCarController(pcl::visualization::PCLVisualizer::Ptr& viewer, Car& car)
+EgoCarController::EgoCarController(
+    pcl::visualization::PCLVisualizer::Ptr &viewer, Car &car)
     : viewer_(viewer), car_(car), currentAngle_(FPS), timeUs_(0) {
   angles_ = {XY, TopDown, Side, FPS};
-  keyStates_ = {
-      {"Left", false},
-      {"Right", false},
-      {"Up", false},
-      {"Down", false},
-      {"x", false},
-      {"space", false}
-  };
+  keyStates_ = {{"Left", false}, {"Right", false}, {"Up", false},
+                {"Down", false}, {"x", false},     {"space", false}};
 }
 
 void EgoCarController::registerKeyboardCallbacks() {
-  viewer_->registerKeyboardCallback([&](const pcl::visualization::KeyboardEvent& event) {
-    if (keyStates_.find(event.getKeySym()) != keyStates_.end()) {
-      keyStates_[event.getKeySym()] = event.keyDown();
-    }
-    if (event.isShiftPressed()) {car_.accelerate(10.0, 1);}
-  });
+  viewer_->registerKeyboardCallback(
+      [&](const pcl::visualization::KeyboardEvent &event) {
+        if (keyStates_.find(event.getKeySym()) != keyStates_.end()) {
+          keyStates_[event.getKeySym()] = event.keyDown();
+        }
+        if (event.isShiftPressed()) {
+          car_.accelerate(10.0, 1);
+        }
+      });
 }
 
 void EgoCarController::handleKeyboardInput() {
@@ -53,7 +50,7 @@ void EgoCarController::handleKeyboardInput() {
   }
 }
 
-void EgoCarController::update(float dt, Scene& scene) {
+void EgoCarController::update(float dt, Scene &scene) {
   scene.stepScene(car_, dt, 10, viewer_);
   timeUs_ += intervalUs_;
 }

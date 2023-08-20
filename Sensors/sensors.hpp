@@ -10,10 +10,7 @@
 class MeasurementPackage {
 public:
   long long timeStamp;
-  enum SensorType{
-    LIDAR,
-    RADAR
-  } sensorType;
+  enum SensorType { LIDAR, RADAR } sensorType;
 
   Eigen::VectorXd rawMeasurements;
 };

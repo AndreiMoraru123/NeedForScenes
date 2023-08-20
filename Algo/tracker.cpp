@@ -6,15 +6,18 @@
 #include <cmath>
 
 Tracker::Tracker() {
-  x_ = Eigen::VectorXd(5);  // initial state vector
-  P_ = Eigen::MatrixXd(5, 5);  // initial covariance matrix
-  std_a_ = 10.0;  // Process noise standard deviation longitudinal acceleration in m/s^2
-  std_yawdd_ = 1.0;  // Process noise standard deviation yaw acceleration in rad/s^2
-  std_laspx_ = 5.0;  // Laser measurement noise standard deviation position1 in m
-  std_laspy_ = 5.0;  // Laser measurement noise standard deviation position2 in m
+  x_ = Eigen::VectorXd(5);    // initial state vector
+  P_ = Eigen::MatrixXd(5, 5); // initial covariance matrix
+  std_a_ = 10.0; // Process noise standard deviation longitudinal acceleration
+                 // in m/s^2
+  std_yawdd_ =
+      1.0; // Process noise standard deviation yaw acceleration in rad/s^2
+  std_laspx_ = 5.0; // Laser measurement noise standard deviation position1 in m
+  std_laspy_ = 5.0; // Laser measurement noise standard deviation position2 in m
   std_radr_ = 0.3;  // Radar measurement noise standard deviation radius in m
-  std_radphi_ = 0.03;  // Radar measurement noise standard deviation angle in rad
-  std_radrd_ = 0.3;  // Radar measurement noise standard deviation radius change in m/s
+  std_radphi_ = 0.03; // Radar measurement noise standard deviation angle in rad
+  std_radrd_ =
+      0.3; // Radar measurement noise standard deviation radius change in m/s
   is_initialized_ = false;
   n_x_ = 5;
   n_aug_ = 7;
@@ -37,20 +40,25 @@ void Tracker::ProcessMeasurement(MeasurementPackage meas_package) {
   if (!is_initialized_) {
     // Initializing differs depending on the first sensor that hits the cars
     if (meas_package.sensorType == MeasurementPackage::SensorType::LIDAR) {
-      x_ << meas_package.rawMeasurements[0], meas_package.rawMeasurements[1], 0, 0, 0;
+      x_ << meas_package.rawMeasurements[0], meas_package.rawMeasurements[1], 0,
+          0, 0;
       P_ = Eigen::MatrixXd::Identity(5, 5);
-      P_(0,0) = std_laspx_ * std_laspx_;
-      P_(1,1) = std_laspy_ * std_laspy_;
-    } else if (meas_package.sensorType == MeasurementPackage::SensorType::RADAR) {
-      const double x = meas_package.rawMeasurements(0) * cos(meas_package.rawMeasurements(1));
-      const double y = meas_package.rawMeasurements(0) * sin(meas_package.rawMeasurements(1));
+      P_(0, 0) = std_laspx_ * std_laspx_;
+      P_(1, 1) = std_laspy_ * std_laspy_;
+    } else if (meas_package.sensorType ==
+               MeasurementPackage::SensorType::RADAR) {
+      const double x = meas_package.rawMeasurements(0) *
+                       cos(meas_package.rawMeasurements(1));
+      const double y = meas_package.rawMeasurements(0) *
+                       sin(meas_package.rawMeasurements(1));
       const double v = meas_package.rawMeasurements(2);
-      x_ << x, y, v, meas_package.rawMeasurements(0), meas_package.rawMeasurements(2);
+      x_ << x, y, v, meas_package.rawMeasurements(0),
+          meas_package.rawMeasurements(2);
       P_ = Eigen::MatrixXd::Identity(5, 5);
-      P_ = P_.array() * (std_radr_* std_radr_);
-      P_(2,2) = std_radrd_ * std_radrd_;
-      P_(3,3) = std_radphi_ * std_radphi_;
-      P_(4,4) = std_radphi_ * std_radphi_;
+      P_ = P_.array() * (std_radr_ * std_radr_);
+      P_(2, 2) = std_radrd_ * std_radrd_;
+      P_(3, 3) = std_radphi_ * std_radphi_;
+      P_(4, 4) = std_radphi_ * std_radphi_;
     }
     time_us_ = meas_package.timeStamp;
     is_initialized_ = true;
@@ -97,19 +105,25 @@ Eigen::MatrixXd Tracker::createAugmentedCovarianceMatrix() const {
   Eigen::MatrixXd P_aug = Eigen::MatrixXd(n_aug_, n_aug_);
   P_aug.setZero(n_aug_, n_aug_);
   P_aug.topLeftCorner(5, 5) = P_;
-  P_aug.bottomRightCorner(2, 2) << std_a_ * std_a_, 0, 0, std_yawdd_ * std_yawdd_;
+  P_aug.bottomRightCorner(2, 2) << std_a_ * std_a_, 0, 0,
+      std_yawdd_ * std_yawdd_;
   return P_aug;
 }
 
-Eigen::MatrixXd Tracker::createAugmentedSigmaPoints(const Eigen::MatrixXd& A, const Eigen::VectorXd& x_aug) const {
+Eigen::MatrixXd
+Tracker::createAugmentedSigmaPoints(const Eigen::MatrixXd &A,
+                                    const Eigen::VectorXd &x_aug) const {
   Eigen::MatrixXd Xsig_aug = Eigen::MatrixXd(n_aug_, 2 * n_aug_ + 1);
   Xsig_aug.col(0) = x_aug;
-  Xsig_aug.middleCols(1, n_aug_) = (std::sqrt(lambda_ + n_aug_) * A.array()).colwise() + x_aug.array();
-  Xsig_aug.middleCols(n_aug_ + 1, n_aug_) = (-std::sqrt(lambda_ + n_aug_) * A.array()).colwise() + x_aug.array();
+  Xsig_aug.middleCols(1, n_aug_) =
+      (std::sqrt(lambda_ + n_aug_) * A.array()).colwise() + x_aug.array();
+  Xsig_aug.middleCols(n_aug_ + 1, n_aug_) =
+      (-std::sqrt(lambda_ + n_aug_) * A.array()).colwise() + x_aug.array();
   return Xsig_aug;
 }
 
-Eigen::MatrixXd Tracker::predictSigmaPoints(const Eigen::MatrixXd& Xsig_aug, double delta_t) const {
+Eigen::MatrixXd Tracker::predictSigmaPoints(const Eigen::MatrixXd &Xsig_aug,
+                                            double delta_t) const {
 
   Eigen::MatrixXd Xsig_pred = Eigen::MatrixXd(n_x_, 2 * n_aug_ + 1);
 
@@ -125,34 +139,36 @@ Eigen::MatrixXd Tracker::predictSigmaPoints(const Eigen::MatrixXd& Xsig_aug, dou
     double px_p, py_p;
 
     if (fabs(yaw_rate) > 0.001) {
-      px_p = px + (v/yaw_rate) * (sin(yaw + yaw_rate*delta_t) - sin(yaw));
-      py_p = py + (v/yaw_rate) * (cos(yaw) - cos(yaw + yaw_rate*delta_t));
+      px_p = px + (v / yaw_rate) * (sin(yaw + yaw_rate * delta_t) - sin(yaw));
+      py_p = py + (v / yaw_rate) * (cos(yaw) - cos(yaw + yaw_rate * delta_t));
     } else {
-      px_p = px + v*delta_t*cos(yaw);
-      py_p = py + v*delta_t*sin(yaw);
+      px_p = px + v * delta_t * cos(yaw);
+      py_p = py + v * delta_t * sin(yaw);
     }
 
     double v_p = v;
-    double yaw_p = yaw + yaw_rate*delta_t;
+    double yaw_p = yaw + yaw_rate * delta_t;
     double yawd_p = yaw_rate;
 
     // add noise
-    px_p = px_p + 0.5*nu_a*delta_t*delta_t*cos(yaw);
-    py_p = py_p + 0.5*nu_a*delta_t*delta_t*sin(yaw);
-    v_p = v_p + nu_a*delta_t;
-    yaw_p = yaw_p + 0.5*nu_yawdd*delta_t*delta_t;
-    yawd_p = yawd_p + nu_yawdd*delta_t;
+    px_p = px_p + 0.5 * nu_a * delta_t * delta_t * cos(yaw);
+    py_p = py_p + 0.5 * nu_a * delta_t * delta_t * sin(yaw);
+    v_p = v_p + nu_a * delta_t;
+    yaw_p = yaw_p + 0.5 * nu_yawdd * delta_t * delta_t;
+    yawd_p = yawd_p + nu_yawdd * delta_t;
 
-    Xsig_pred(0,i) = px_p;
-    Xsig_pred(1,i) = py_p;
-    Xsig_pred(2,i) = v_p;
-    Xsig_pred(3,i) = yaw_p;
-    Xsig_pred(4,i) = yawd_p;
+    Xsig_pred(0, i) = px_p;
+    Xsig_pred(1, i) = py_p;
+    Xsig_pred(2, i) = v_p;
+    Xsig_pred(3, i) = yaw_p;
+    Xsig_pred(4, i) = yawd_p;
   }
   return Xsig_pred;
 }
 
-Eigen::MatrixXd Tracker::calculatePredictedCovariance(const Eigen::MatrixXd& Xsig_pred, const Eigen::VectorXd& x) {
+Eigen::MatrixXd
+Tracker::calculatePredictedCovariance(const Eigen::MatrixXd &Xsig_pred,
+                                      const Eigen::VectorXd &x) {
   // Initialize predicted covariance matrix
   Eigen::MatrixXd P_pred = Eigen::MatrixXd::Zero(n_x_, n_x_);
   // Calculate predicted covariance matrix
@@ -165,8 +181,8 @@ Eigen::MatrixXd Tracker::calculatePredictedCovariance(const Eigen::MatrixXd& Xsi
   return P_pred;
 }
 
-void Tracker::UpdateLidar(const MeasurementPackage& meas_package) {
-  int n_z = 2;  // Measurement dimension
+void Tracker::UpdateLidar(const MeasurementPackage &meas_package) {
+  int n_z = 2; // Measurement dimension
   Eigen::MatrixXd Zsig = createSigmaPointsLidar(n_z);
   Eigen::VectorXd z_pred = predictMeasurementMeanLidar(Zsig, n_z);
   Eigen::MatrixXd S = predictMeasurementCovarianceLidar(Zsig, z_pred, n_z);
@@ -176,7 +192,9 @@ void Tracker::UpdateLidar(const MeasurementPackage& meas_package) {
 }
 
 Eigen::MatrixXd Tracker::createSigmaPointsLidar(int n_z) {
-  Eigen::MatrixXd Zsig = Eigen::MatrixXd(n_z, 2 * n_aug_ + 1);  // create matrix for sigma points in measurement space
+  Eigen::MatrixXd Zsig = Eigen::MatrixXd(
+      n_z,
+      2 * n_aug_ + 1); // create matrix for sigma points in measurement space
   // transform sigma points into measurement space
   for (int i = 0; i < 2 * n_aug_ + 1; i++) {
     double p_x = Xsig_pred_(0, i);
@@ -187,8 +205,9 @@ Eigen::MatrixXd Tracker::createSigmaPointsLidar(int n_z) {
   return Zsig;
 }
 
-Eigen::VectorXd Tracker::predictMeasurementMeanLidar(const Eigen::MatrixXd& Zsig, int n_z) {
-  Eigen::VectorXd z_pred = Eigen::VectorXd(n_z);  // mean predicted measurement
+Eigen::VectorXd
+Tracker::predictMeasurementMeanLidar(const Eigen::MatrixXd &Zsig, int n_z) {
+  Eigen::VectorXd z_pred = Eigen::VectorXd(n_z); // mean predicted measurement
   // calculate mean predicted measurement
   z_pred.fill(0.0);
   for (int i = 0; i < 2 * n_aug_ + 1; i++) {
@@ -197,40 +216,45 @@ Eigen::VectorXd Tracker::predictMeasurementMeanLidar(const Eigen::MatrixXd& Zsig
   return z_pred;
 }
 
-Eigen::MatrixXd Tracker::predictMeasurementCovarianceLidar(const Eigen::MatrixXd& Zsig, const Eigen::VectorXd& z_pred, int n_z) {
-  Eigen::MatrixXd S = Eigen::MatrixXd(n_z, n_z);  // measurement covariance matrix
+Eigen::MatrixXd Tracker::predictMeasurementCovarianceLidar(
+    const Eigen::MatrixXd &Zsig, const Eigen::VectorXd &z_pred, int n_z) {
+  Eigen::MatrixXd S =
+      Eigen::MatrixXd(n_z, n_z); // measurement covariance matrix
   // calculate measurement covariance matrix S
   S.fill(0.0);
   for (int i = 0; i < 2 * n_aug_ + 1; i++) {
-    Eigen::VectorXd z_diff = Zsig.col(i) - z_pred;  // residual
+    Eigen::VectorXd z_diff = Zsig.col(i) - z_pred; // residual
     S = S + weights_(i) * z_diff * z_diff.transpose();
   }
-  Eigen::MatrixXd R = Eigen::MatrixXd(n_z, n_z);  // measurement noise covariance matrix
-  R << std_laspx_ * std_laspx_, 0,
-      0, std_laspy_ * std_laspy_;
+  Eigen::MatrixXd R =
+      Eigen::MatrixXd(n_z, n_z); // measurement noise covariance matrix
+  R << std_laspx_ * std_laspx_, 0, 0, std_laspy_ * std_laspy_;
   S = S + R;
   return S;
 }
 
-Eigen::MatrixXd Tracker::calculateCrossCorrelationLidar(Eigen::MatrixXd Zsig, const Eigen::VectorXd& z_pred, int n_z) {
+Eigen::MatrixXd Tracker::calculateCrossCorrelationLidar(
+    Eigen::MatrixXd Zsig, const Eigen::VectorXd &z_pred, int n_z) {
   Eigen::MatrixXd Tc = Eigen::MatrixXd(n_x_, n_z);
   Tc.fill(0.0);
   for (int i = 0; i < 2 * n_aug_ + 1; i++) {
-    Eigen::VectorXd z_diff = Zsig.col(i) - z_pred;  // residual
-    Eigen::VectorXd x_diff = Xsig_pred_.col(i) - x_;  // state difference
+    Eigen::VectorXd z_diff = Zsig.col(i) - z_pred;   // residual
+    Eigen::VectorXd x_diff = Xsig_pred_.col(i) - x_; // state difference
     Tc = Tc + weights_(i) * x_diff * z_diff.transpose();
   }
   return Tc;
 }
 
-void Tracker::updateStateMeanAndCovarianceLidar(Eigen::MatrixXd K, const Eigen::VectorXd& z_pred, const MeasurementPackage& meas_package, const Eigen::MatrixXd& S) {
+void Tracker::updateStateMeanAndCovarianceLidar(
+    Eigen::MatrixXd K, const Eigen::VectorXd &z_pred,
+    const MeasurementPackage &meas_package, const Eigen::MatrixXd &S) {
   Eigen::VectorXd z_diff = meas_package.rawMeasurements - z_pred;
   x_ = x_ + K * z_diff;
   P_ = P_ - K * S * K.transpose();
 }
 
-void Tracker::UpdateRadar(const MeasurementPackage& meas_package) {
-  int n_z = 3;  // Measurement dimension
+void Tracker::UpdateRadar(const MeasurementPackage &meas_package) {
+  int n_z = 3; // Measurement dimension
   Eigen::MatrixXd Zsig = createSigmaPointsInMeasurementSpace(n_z);
   Eigen::VectorXd z_pred = predictMeasurementMean(Zsig, n_z);
   Eigen::MatrixXd S = predictMeasurementCovariance(Zsig, z_pred, n_z);
@@ -264,47 +288,59 @@ Eigen::VectorXd Tracker::predictMeasurementMean(Eigen::MatrixXd Zsig, int n_z) {
   return z_pred;
 }
 
-Eigen::MatrixXd Tracker::predictMeasurementCovariance(Eigen::MatrixXd Zsig, const Eigen::VectorXd& z_pred, int n_z) {
+Eigen::MatrixXd
+Tracker::predictMeasurementCovariance(Eigen::MatrixXd Zsig,
+                                      const Eigen::VectorXd &z_pred, int n_z) {
   Eigen::MatrixXd S = Eigen::MatrixXd(n_z, n_z);
   S.fill(0.0);
   for (int i = 0; i < 2 * n_aug_ + 1; i++) {
     Eigen::VectorXd z_diff = Zsig.col(i) - z_pred;
-    while (z_diff(1) > M_PI) z_diff(1) -= 2. * M_PI;
-    while (z_diff(1) < -M_PI) z_diff(1) += 2. * M_PI;
+    while (z_diff(1) > M_PI)
+      z_diff(1) -= 2. * M_PI;
+    while (z_diff(1) < -M_PI)
+      z_diff(1) += 2. * M_PI;
     S = S + weights_(i) * z_diff * z_diff.transpose();
   }
   Eigen::MatrixXd R = Eigen::MatrixXd(n_z, n_z);
-  R << std_radr_ * std_radr_, 0, 0,
-      0, std_radphi_ * std_radphi_, 0,
-      0, 0, std_radrd_ * std_radrd_;
-  S = S + R; // Add measurement noise covariance matrix R to the measurement prediction covariance S
+  R << std_radr_ * std_radr_, 0, 0, 0, std_radphi_ * std_radphi_, 0, 0, 0,
+      std_radrd_ * std_radrd_;
+  S = S + R; // Add measurement noise covariance matrix R to the measurement
+             // prediction covariance S
   return S;
 }
 
-Eigen::MatrixXd Tracker::calculateCrossCorrelation(Eigen::MatrixXd Zsig, const Eigen::VectorXd& z_pred, int n_z) {
+Eigen::MatrixXd
+Tracker::calculateCrossCorrelation(Eigen::MatrixXd Zsig,
+                                   const Eigen::VectorXd &z_pred, int n_z) {
   Eigen::MatrixXd Tc = Eigen::MatrixXd(n_x_, n_z);
   Tc.fill(0.0);
   for (int i = 0; i < 2 * n_aug_ + 1; i++) {
     Eigen::VectorXd x_diff = Xsig_pred_.col(i) - x_;
-    x_diff(3) -= 2.0 * M_PI * std::floor((x_diff(3) + M_PI) * (1.0 / (2.0 * M_PI)));
+    x_diff(3) -=
+        2.0 * M_PI * std::floor((x_diff(3) + M_PI) * (1.0 / (2.0 * M_PI)));
     Eigen::VectorXd z_diff = Zsig.col(i) - z_pred;
-    z_diff(1) -= 2.0 * M_PI * std::floor((z_diff(1) + M_PI) * (1.0 / (2.0 * M_PI)));
+    z_diff(1) -=
+        2.0 * M_PI * std::floor((z_diff(1) + M_PI) * (1.0 / (2.0 * M_PI)));
     Tc = Tc + weights_(i) * x_diff * z_diff.transpose();
   }
   return Tc;
 }
 
-
-Eigen::MatrixXd Tracker::calculateKalmanGain(const Eigen::MatrixXd& Tc, const Eigen::MatrixXd& S) {
+Eigen::MatrixXd Tracker::calculateKalmanGain(const Eigen::MatrixXd &Tc,
+                                             const Eigen::MatrixXd &S) {
   Eigen::MatrixXd K = Tc * S.inverse();
   return K;
 }
 
-void Tracker::updateStateMeanAndCovariance(Eigen::MatrixXd K, const Eigen::VectorXd& z_pred, const MeasurementPackage& meas_package, Eigen::MatrixXd& S) {
+void Tracker::updateStateMeanAndCovariance(
+    Eigen::MatrixXd K, const Eigen::VectorXd &z_pred,
+    const MeasurementPackage &meas_package, Eigen::MatrixXd &S) {
   Eigen::VectorXd z = meas_package.rawMeasurements;
   Eigen::VectorXd z_diff = z - z_pred;
-  while (z_diff(1) > M_PI) z_diff(1) -= 2. * M_PI;
-  while (z_diff(1) < -M_PI) z_diff(1) += 2. * M_PI;
+  while (z_diff(1) > M_PI)
+    z_diff(1) -= 2. * M_PI;
+  while (z_diff(1) < -M_PI)
+    z_diff(1) += 2. * M_PI;
   x_ = x_ + K * z_diff;
   P_ = P_ - K * S * K.transpose();
 }

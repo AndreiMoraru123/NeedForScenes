@@ -4,7 +4,7 @@
 
 #include "scene.hpp"
 
-Scene::Scene(pcl::visualization::PCLVisualizer::Ptr& viewer) {
+Scene::Scene(pcl::visualization::PCLVisualizer::Ptr &viewer) {
 
   tools = Tools();
   std::mt19937 gen(std::chrono::system_clock::now().time_since_epoch().count());
@@ -25,38 +25,35 @@ Scene::Scene(pcl::visualization::PCLVisualizer::Ptr& viewer) {
 
   for (int i = 0; i <= 3; ++i) {
     pcl::PointXYZ position(disPos(gen), disPos(gen), 0.0);
-    ParkingSpot parkingSpot(position, parkingSpotLength, parkingSpotWidth, parkingSpotHeight, i);
+    ParkingSpot parkingSpot(position, parkingSpotLength, parkingSpotWidth,
+                            parkingSpotHeight, i);
     parkingSpot.setName("parkingSpot" + std::to_string(i));
     parkingSpots.push_back(parkingSpot);
   }
 
-  Car car1 = Car(
-      Vect3(-10, 4, 0),  // Position
-      Vect3(4, 2, 2),    // Dimensions
-      Color(1, 0, 0),    // Color
-      10,                // Angle
-      2,                 // Front Center Distance
-      "car1"             // Name
+  Car car1 = Car(Vect3(-10, 4, 0), // Position
+                 Vect3(4, 2, 2),   // Dimensions
+                 Color(1, 0, 0),   // Color
+                 10,               // Angle
+                 2,                // Front Center Distance
+                 "car1"            // Name
   );
 
-  Car car2 = Car(
-      Vect3(25, -40, 0), // Position
-      Vect3(4, 2, 2),    // Dimensions
-      Color(0, 0, 1),    // Color
-      -6,                // Angle
-      2,                 // Front Center Distance
-      "car2"             // Name
+  Car car2 = Car(Vect3(25, -40, 0), // Position
+                 Vect3(4, 2, 2),    // Dimensions
+                 Color(0, 0, 1),    // Color
+                 -6,                // Angle
+                 2,                 // Front Center Distance
+                 "car2"             // Name
   );
 
-  Car car3 = Car(
-      Vect3(-12, 30, 0), // Position
-      Vect3(4, 2, 2),    // Dimensions
-      Color(1, 1, 1),    // Color
-      2,                 // Angle
-      2,                 // Front Center Distance
-      "car3"             // Name
+  Car car3 = Car(Vect3(-12, 30, 0), // Position
+                 Vect3(4, 2, 2),    // Dimensions
+                 Color(1, 1, 1),    // Color
+                 2,                 // Angle
+                 2,                 // Front Center Distance
+                 "car3"             // Name
   );
-
 
   if (trackCars[0]) {
     Tracker tracker1;
@@ -86,7 +83,7 @@ Scene::Scene(pcl::visualization::PCLVisualizer::Ptr& viewer) {
   car3.render(viewer);
 }
 
-Control Scene::randomControl(std::mt19937& gen, Car& car) {
+Control Scene::randomControl(std::mt19937 &gen, Car &car) {
   std::uniform_real_distribution<> disTime(1, 8);
   std::uniform_real_distribution<> disAcceleration(-5, 5);
   std::uniform_real_distribution<> disSteering(-0.15, 0.15);
@@ -103,14 +100,13 @@ Control Scene::randomControl(std::mt19937& gen, Car& car) {
     acceleration = disAcceleration(gen);
     steering = disSteering(gen);
 
-    Vect3 newPosition = currentPosition + Vect3(time * acceleration * cos(steering),
-                                                time * acceleration * sin(steering),
-                                                0);
+    Vect3 newPosition =
+        currentPosition + Vect3(time * acceleration * cos(steering),
+                                time * acceleration * sin(steering), 0);
     withinBounds = true;
-    for (const auto& coeff : road.getLaneCoefficients()) {
-      double distance = sqrt(
-          pow(newPosition.x - coeff.values[0], 2) +
-          pow(newPosition.y - coeff.values[1], 2));
+    for (const auto &coeff : road.getLaneCoefficients()) {
+      double distance = sqrt(pow(newPosition.x - coeff.values[0], 2) +
+                             pow(newPosition.y - coeff.values[1], 2));
       if (distance < coeff.values[2] / 2) {
         withinBounds = false;
         break;
@@ -121,20 +117,23 @@ Control Scene::randomControl(std::mt19937& gen, Car& car) {
   return Control(time, acceleration * 0.25, steering);
 }
 
-std::vector<Control> Scene::randomControlInstructions(std::mt19937& gen, Car& car, int numInstructions) {
+std::vector<Control> Scene::randomControlInstructions(std::mt19937 &gen,
+                                                      Car &car,
+                                                      int numInstructions) {
   std::vector<Control> instructions;
-  for(int i=0; i<numInstructions; ++i) {
+  for (int i = 0; i < numInstructions; ++i) {
     instructions.push_back(randomControl(gen, car));
   }
   return instructions;
 }
 
-void Scene::stepScene(Car& egoCar, double dt, long long timestamp, pcl::visualization::PCLVisualizer::Ptr& viewer) {
+void Scene::stepScene(Car &egoCar, double dt, long long timestamp,
+                      pcl::visualization::PCLVisualizer::Ptr &viewer) {
 
   road.render(viewer);
-  for (const ParkingSpot& parkingSpot : parkingSpots) {
+  for (const ParkingSpot &parkingSpot : parkingSpots) {
     parkingSpot.render(viewer);
-    if(parkingSpot.isCarParked(egoCar)) {
+    if (parkingSpot.isCarParked(egoCar)) {
       parkedSpots.insert(parkingSpot.getName());
       viewer->addText("Parked!", 200, 200, 20, 1, 1, 1, "parkingText");
     }
@@ -142,7 +141,8 @@ void Scene::stepScene(Car& egoCar, double dt, long long timestamp, pcl::visualiz
 
   if (parkedSpots.size() == parkingSpots.size()) {
     win = true;
-    viewer->addText("Parked on all spots!", 200, 200, 20, 1, 1, 1, "completeParkingText");
+    viewer->addText("Parked on all spots!", 200, 200, 20, 1, 1, 1,
+                    "completeParkingText");
   }
 
   egoCar.move(dt, timestamp);
@@ -151,7 +151,7 @@ void Scene::stepScene(Car& egoCar, double dt, long long timestamp, pcl::visualiz
   Car predictedEgoCar = egoCar;
   predictedEgoCar.move(dt, timestamp);
 
-  for (const Obstacle& obstacle: obstacles) {
+  for (const Obstacle &obstacle : obstacles) {
     obstacle.render(viewer);
     if (obstacle.checkCollision(predictedEgoCar)) {
       viewer->addText("Crashed!", 200, 200, 20, 1, 1, 1, "collisionText");
@@ -163,7 +163,7 @@ void Scene::stepScene(Car& egoCar, double dt, long long timestamp, pcl::visualiz
   }
 
   for (size_t i = 0; i < traffic.size(); ++i) {
-    Car& car = traffic[i];
+    Car &car = traffic[i];
     viewer->removeShape(car.getName());
     viewer->removeShape(car.getName() + "front");
     car.move(dt, timestamp);
@@ -172,8 +172,8 @@ void Scene::stepScene(Car& egoCar, double dt, long long timestamp, pcl::visualiz
     if (trackCars[i]) {
       Eigen::VectorXd gt(4);
       gt << car.getPosition().x, car.getPosition().y,
-            car.getVelocity() * cos(car.getAngle()),
-            car.getVelocity() * sin(car.getAngle());
+          car.getVelocity() * cos(car.getAngle()),
+          car.getVelocity() * sin(car.getAngle());
 
       tools.groundTruth.push_back(gt);
       tools.lidarSense(car, viewer, timestamp, visualize_lidar);
@@ -184,14 +184,14 @@ void Scene::stepScene(Car& egoCar, double dt, long long timestamp, pcl::visualiz
       Eigen::VectorXd estimate(4);
       double v = traffic[i].getTracker().x_(2);
       double yaw = traffic[i].getTracker().x_(3);
-      double vx = cos(yaw)*v;
-      double vy = sin(yaw)*v;
-      estimate << traffic[i].getTracker().x_[0], traffic[i].getTracker().x_[1], vx, vy;
+      double vx = cos(yaw) * v;
+      double vy = sin(yaw) * v;
+      estimate << traffic[i].getTracker().x_[0], traffic[i].getTracker().x_[1],
+          vx, vy;
       tools.estimations.push_back(estimate);
 
-      Car estimatedCar = car;
-      estimatedCar.setPosition(Vect3(estimate[0], estimate[1], car.getPosition().z));
-      if (predictedEgoCar.checkCollision(estimatedCar.getPosition())) {
+      if (predictedEgoCar.checkCollision(
+              Vect3(estimate[0], estimate[1], car.getPosition().z))) {
         viewer->addText("Crashed!", 200, 200, 20, 1, 1, 1, "collisionText");
         egoCar.setVelocity(0.0);
         Vect3 currentPos = egoCar.getPosition();
@@ -202,52 +202,55 @@ void Scene::stepScene(Car& egoCar, double dt, long long timestamp, pcl::visualiz
   }
 
   viewer->addText("Accuracy - RMSE:", 30, 300, 20, 1, 1, 1, "rmse");
-  Eigen::VectorXd rmse = Tools::calculateRMSE(tools.estimations, tools.groundTruth);
-  viewer->addText(" X: " + std::to_string(rmse[0]), 30, 275, 20, 1, 1, 1, "rmse_x");
-  viewer->addText(" Y: " + std::to_string(rmse[1]), 30, 250, 20, 1, 1, 1, "rmse_y");
-  viewer->addText("Vx: " + std::to_string(rmse[2]), 30, 225, 20, 1, 1, 1, "rmse_vx");
-  viewer->addText("Vy: " + std::to_string(rmse[3]), 30, 200, 20, 1, 1, 1, "rmse_vy");
+  Eigen::VectorXd rmse =
+      Tools::calculateRMSE(tools.estimations, tools.groundTruth);
+  viewer->addText(" X: " + std::to_string(rmse[0]), 30, 275, 20, 1, 1, 1,
+                  "rmse_x");
+  viewer->addText(" Y: " + std::to_string(rmse[1]), 30, 250, 20, 1, 1, 1,
+                  "rmse_y");
+  viewer->addText("Vx: " + std::to_string(rmse[2]), 30, 225, 20, 1, 1, 1,
+                  "rmse_vx");
+  viewer->addText("Vy: " + std::to_string(rmse[3]), 30, 200, 20, 1, 1, 1,
+                  "rmse_vy");
 
-  if(timestamp > 1.0e6)
-  {
+  if (timestamp > 1.0e6) {
 
-    if(rmse[0] > rmseThreshold[0])
-    {
+    if (rmse[0] > rmseThreshold[0]) {
       rmseFailLog[0] = rmse[0];
       pass = false;
     }
-    if(rmse[1] > rmseThreshold[1])
-    {
+    if (rmse[1] > rmseThreshold[1]) {
       rmseFailLog[1] = rmse[1];
       pass = false;
     }
-    if(rmse[2] > rmseThreshold[2])
-    {
+    if (rmse[2] > rmseThreshold[2]) {
       rmseFailLog[2] = rmse[2];
       pass = false;
     }
-    if(rmse[3] > rmseThreshold[3])
-    {
+    if (rmse[3] > rmseThreshold[3]) {
       rmseFailLog[3] = rmse[3];
       pass = false;
     }
   }
-  if(!pass)
-  {
+  if (!pass) {
     viewer->addText("RMSE Failed Threshold", 30, 150, 20, 1, 0, 0, "rmse_fail");
-    if(rmseFailLog[0] > 0)
-      viewer->addText(" X: "+std::to_string(rmseFailLog[0]), 30, 125, 20, 1, 0, 0, "rmse_fail_x");
-    if(rmseFailLog[1] > 0)
-      viewer->addText(" Y: "+std::to_string(rmseFailLog[1]), 30, 100, 20, 1, 0, 0, "rmse_fail_y");
-    if(rmseFailLog[2] > 0)
-      viewer->addText("Vx: "+std::to_string(rmseFailLog[2]), 30, 75, 20, 1, 0, 0, "rmse_fail_vx");
-    if(rmseFailLog[3] > 0)
-      viewer->addText("Vy: "+std::to_string(rmseFailLog[3]), 30, 50, 20, 1, 0, 0, "rmse_fail_vy");
+    if (rmseFailLog[0] > 0)
+      viewer->addText(" X: " + std::to_string(rmseFailLog[0]), 30, 125, 20, 1,
+                      0, 0, "rmse_fail_x");
+    if (rmseFailLog[1] > 0)
+      viewer->addText(" Y: " + std::to_string(rmseFailLog[1]), 30, 100, 20, 1,
+                      0, 0, "rmse_fail_y");
+    if (rmseFailLog[2] > 0)
+      viewer->addText("Vx: " + std::to_string(rmseFailLog[2]), 30, 75, 20, 1, 0,
+                      0, "rmse_fail_vx");
+    if (rmseFailLog[3] > 0)
+      viewer->addText("Vy: " + std::to_string(rmseFailLog[3]), 30, 50, 20, 1, 0,
+                      0, "rmse_fail_vy");
   }
 }
 
-bool Scene::checkTrafficCollision(Car& egoCar) {
-  for (Car& car : traffic) {
+bool Scene::checkTrafficCollision(Car &egoCar) {
+  for (Car &car : traffic) {
     if (egoCar.checkCollision(car.getPosition())) {
       return true;
     }

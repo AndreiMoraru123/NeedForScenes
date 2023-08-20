@@ -9,13 +9,15 @@
 
 class Obstacle {
 public:
-  Obstacle(const Vect3& position, const Vect3& dimensions);
+  Obstacle(const Vect3 &position, const Vect3 &dimensions);
   [[maybe_unused]] [[nodiscard]] Vect3 getPosition() const;
   [[maybe_unused]] [[nodiscard]] Vect3 getDimensions() const;
   [[maybe_unused]] [[nodiscard]] std::string getName() const;
-  [[maybe_unused]] void render(pcl::visualization::PCLVisualizer::Ptr& viewer) const;
-  bool checkCollision(Car& car) const;
-  void setName(const std::string& name);
+  [[maybe_unused]] void
+  render(pcl::visualization::PCLVisualizer::Ptr &viewer) const;
+  bool checkCollision(Car &car) const;
+  void setName(const std::string &name);
+
 private:
   Vect3 position_;
   Vect3 dimensions_;

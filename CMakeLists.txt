@@ -19,4 +19,4 @@ add_executable(play main.cpp Toolkit/tools.cpp
         Objects/car.cpp Objects/road.cpp
         Objects/parkingspot.cpp)
 
-target_link_libraries (play ${PCL_LIBRARIES})
+target_link_libraries(play ${PCL_LIBRARIES})

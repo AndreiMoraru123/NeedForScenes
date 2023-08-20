@@ -9,15 +9,17 @@
 
 class ParkingSpot {
 public:
-  ParkingSpot(const pcl::PointXYZ& position, double length, double width, double height, int id);
+  ParkingSpot(const pcl::PointXYZ &position, double length, double width,
+              double height, int id);
   [[maybe_unused]] [[nodiscard]] pcl::PointXYZ getPosition() const;
   [[maybe_unused]] [[nodiscard]] double getLength() const;
   [[maybe_unused]] [[nodiscard]] double getWidth() const;
   [[maybe_unused]] [[nodiscard]] double getHeight() const;
   [[maybe_unused]] [[nodiscard]] std::string getName() const;
-  void render(pcl::visualization::PCLVisualizer::Ptr& viewer) const;
-  void setName(const std::string& name);
-  bool isCarParked(Car& car) const;
+  void render(pcl::visualization::PCLVisualizer::Ptr &viewer) const;
+  void setName(const std::string &name);
+  bool isCarParked(Car &car) const;
+
 private:
   pcl::PointXYZ position_;
   double length_;
